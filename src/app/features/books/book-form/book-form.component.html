@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>New Book</h2>
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>ISBN</mat-label>
+      <input matInput formControlName="isbn" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Pubblication Year</mat-label>
+      <input matInput type="number" formControlName="pubYear" />
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="submit()">Save</button>
+</mat-dialog-actions>

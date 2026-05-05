@@ -54,6 +54,26 @@ export class BookListComponent implements OnInit {
       });
   }
 
+  openEditForm(book: Book) {
+    this.dialog
+      .open(BookFormComponent, { data: book })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.bookService.update(book.id, result).subscribe({
+            next: () => {
+              this.load();
+              this.snackBar.open('Book has been edited', 'OK', { duration: 3000 });
+            },
+            error: () =>
+              this.snackBar.open('An error occured while trying to update the book', 'OK', {
+                duration: 3000,
+              }),
+          });
+        }
+      });
+  }
+
   delete(id: number) {
     this.bookService.delete(id).subscribe({
       next: () => {

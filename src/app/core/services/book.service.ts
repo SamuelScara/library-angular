@@ -14,8 +14,16 @@ export class BookService {
     return this.http.get<Book[]>(this.baseUrl);
   }
 
+  getById(id: number): Observable<Book> {
+    return this.http.get<Book>(`${this.baseUrl}/${id}`);
+  }
+
   create(book: Partial<Book>): Observable<Book> {
     return this.http.post<Book>(this.baseUrl, book);
+  }
+
+  update(id: number, book: Partial<Book>): Observable<Book> {
+    return this.http.put<Book>(`${this.baseUrl}/${id}`, book);
   }
 
   delete(id: number): Observable<void> {

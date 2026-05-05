@@ -6,8 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'app-book-form-component',
-  standalone: true,
+  selector: 'app-author-form-component',
   imports: [
     ReactiveFormsModule,
     MatDialogModule,
@@ -15,17 +14,17 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule,
     MatButtonModule,
   ],
-  templateUrl: './book-form.component.html',
-  styleUrl: './book-form.component.css',
+  templateUrl: './author-form.component.html',
+  styleUrl: './author-form.component.css',
 })
-export class BookFormComponent {
-  dialogRef = inject(MatDialogRef<BookFormComponent>);
+export class AuthorFormComponent {
+  dialogRef = inject(MatDialogRef<AuthorFormComponent>);
   private fb = inject(FormBuilder);
 
   form = this.fb.group({
-    title: ['', Validators.required],
-    isbn: ['', Validators.required],
-    pubYear: [null, [Validators.required, Validators.min(1)]],
+    firstName: ['', Validators.required],
+    lastName: ['', Validators.required],
+    nationality: ['', Validators.required],
   });
 
   submit() {

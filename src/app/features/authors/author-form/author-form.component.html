@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>New Author</h2>
+<h2 mat-dialog-title>{{ isEdit ? 'Edit Book' : 'New Book' }}</h2>
 <mat-dialog-content>
   <form [formGroup]="form">
     <mat-form-field appearance="outline">

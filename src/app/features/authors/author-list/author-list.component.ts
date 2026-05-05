@@ -54,6 +54,26 @@ export class AuthorListComponent {
       });
   }
 
+  openEditForm(author: Author) {
+    this.dialog
+      .open(AuthorFormComponent, { data: author })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.authorService.update(author.id, result).subscribe({
+            next: () => {
+              this.load();
+              this.snackBar.open('Author has been edited', 'OK', { duration: 3000 });
+            },
+            error: () =>
+              this.snackBar.open('An error occured while trying to update the author', 'OK', {
+                duration: 3000,
+              }),
+          });
+        }
+      });
+  }
+
   delete(id: number) {
     this.authorService.delete(id).subscribe({
       next: () => {

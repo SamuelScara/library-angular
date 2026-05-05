@@ -14,8 +14,16 @@ export class AuthorService {
     return this.http.get<Author[]>(this.baseUrl);
   }
 
+  getById(id: number): Observable<Author> {
+    return this.http.get<Author>(`${this.baseUrl}/${id}`);
+  }
+
   create(author: Partial<Author>): Observable<Author> {
     return this.http.post<Author>(this.baseUrl, author);
+  }
+
+  update(id: number, author: Partial<Author>): Observable<Author> {
+    return this.http.put<Author>(`${this.baseUrl}/${id}`, author);
   }
 
   delete(id: number): Observable<void> {

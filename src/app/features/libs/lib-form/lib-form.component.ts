@@ -22,12 +22,12 @@ import { Lib } from '../../../core/models/lib.model';
 export class LibFormComponent {
   dialogRef = inject(MatDialogRef<LibFormComponent>);
   private fb = inject(FormBuilder);
-  data: Lib | null = inject(MAT_DIALOG_DATA, { optional: true });
+  data: Lib | null = inject(MAT_DIALOG_DATA, { optional: true }); // MAT_DIALOG_DATA contains the current lib object |||||| data is null on creation - Lib object on edit
 
   form = this.fb.group({
     name: [this.data?.name ?? '', Validators.required],
     city: [this.data?.city ?? '', Validators.required],
-    address: [this.data?.address ?? null, [Validators.required, Validators.min(1)]],
+    address: [this.data?.address ?? '', Validators.required],
   });
 
   get isEdit(): boolean {

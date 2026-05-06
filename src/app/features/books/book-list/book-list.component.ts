@@ -23,7 +23,7 @@ export class BookListComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   books: Book[] = [];
-  columns = ['title', 'isbn', 'pubYear', 'authors', 'actions'];
+  columns = ['title', 'isbn', 'pubYear', 'authors', 'availability', 'actions'];
 
   ngOnInit(): void {
     this.load();

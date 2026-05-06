@@ -43,14 +43,16 @@ export class BookListComponent implements OnInit {
       .afterClosed()
       .subscribe((result) => {
         if (result) {
-          const { selectedAuthorIds, ...bookData } = result;
+          const { selectedAuthorIds, ...bookData } = result; // destructuring of the result object, selectedAuthorIds: array of author ids selected - ...bookData: the rest of book info {title, isbn, pubYear}
           this.bookService.create(bookData).subscribe({
+            // bookData is passed beacause bookService.create expect only the book data, not the author ids
             next: (created) => {
+              // map: for every selected author, create an Observable that calls with a POST request /api/books/{created.id}/authors/{authorId}
               const assignments = (selectedAuthorIds ?? []).map((authorId: number) =>
                 this.bookService.assignAuthor(created.id, authorId),
               );
               if (assignments.length > 0) {
-                forkJoin(assignments).subscribe(() => this.load());
+                forkJoin(assignments).subscribe(() => this.load()); // forkJoin
               } else {
                 this.load();
               }

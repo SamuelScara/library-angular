@@ -28,9 +28,9 @@ export class AssignBooksDialogComponent implements OnInit {
   availableBooks: Book[] = [];
 
   ngOnInit(): void {
-    const assignedIds = new Set(this.lib.books.map((b) => b.id));
+    const assignedIds = new Set(this.lib.books.map((b) => b.id)); // Set with all assigned books for the current library
     this.bookService.getAll().subscribe((books) => {
-      this.availableBooks = books.filter((b) => !assignedIds.has(b.id));
+      this.availableBooks = books.filter((b) => !assignedIds.has(b.id)); // take all books and filter for the books that aren't already assigned for the current library
       this.cdr.detectChanges();
     });
   }
@@ -38,7 +38,7 @@ export class AssignBooksDialogComponent implements OnInit {
   assign(book: Book): void {
     this.libService.assignBook(this.lib.id, book.id).subscribe({
       next: () => {
-        this.availableBooks = this.availableBooks.filter((b) => b.id !== book.id);
+        this.availableBooks = this.availableBooks.filter((b) => b.id !== book.id); // remove the assigned book from the availableBooks array
         this.cdr.detectChanges();
         this.snackBar.open(`"${book.title}" assigned`, 'OK', { duration: 3000 });
       },

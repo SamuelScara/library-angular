@@ -1,0 +1,51 @@
+<mat-toolbar>
+  <span>Exhibitions</span>
+  <span style="flex: 1"></span>
+  <button mat-flat-button color="primary" (click)="openForm()">Add</button>
+</mat-toolbar>
+
+<table mat-table [dataSource]="exhibitions" style="width: 100%;">
+
+  <ng-container matColumnDef="title">
+    <th mat-header-cell *matHeaderCellDef>Title</th>
+    <td mat-cell *matCellDef="let e">{{ e.title }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="libId">
+    <th mat-header-cell *matHeaderCellDef>Library ID</th>
+    <td mat-cell *matCellDef="let e">{{ e.libId }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="startDate">
+    <th mat-header-cell *matHeaderCellDef>Start</th>
+    <td mat-cell *matCellDef="let e">{{ e.startDate | date:'dd/MM/yyyy' }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="endDate">
+    <th mat-header-cell *matHeaderCellDef>End</th>
+    <td mat-cell *matCellDef="let e">{{ e.endDate | date:'dd/MM/yyyy' }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="simulationDate">
+    <th mat-header-cell *matHeaderCellDef>Simulated on</th>
+    <td mat-cell *matCellDef="let e">{{ e.simulationDate ? (e.simulationDate | date:'dd/MM/yyyy') : '—' }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let e">
+      <button mat-icon-button color="primary" (click)="openEditForm(e)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" (click)="delete(e.id)">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button mat-flat-button color="accent" (click)="simulate(e)">
+        <mat-icon>play_arrow</mat-icon> Simulate
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columns"></tr>
+  <tr mat-row *matRowDef="let row; columns: columns"></tr>
+</table>

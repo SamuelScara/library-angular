@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>{{ result.exhibition }} — {{ result.library }}</h2>
+  <p style="padding: 0 24px; color: gray">
+    Simulation date: {{ result.simulationDate | date:'dd/MM/yyyy' }}
+  </p> 
+
+  <mat-dialog-content>
+    <table mat-table [dataSource]="result.ranking" style="width: 100%;">
+
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let e">{{ e.position }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="bookTitle">
+        <th mat-header-cell *matHeaderCellDef>Book</th>
+        <td mat-cell *matCellDef="let e">{{ e.bookTitle }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="authorName">
+        <th mat-header-cell *matHeaderCellDef>Author</th>
+        <td mat-cell *matCellDef="let e">{{ e.authorName }}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="visitorsNum">
+        <th mat-header-cell *matHeaderCellDef>Visitors</th>
+        <td mat-cell *matCellDef="let e">{{ e.visitorsNum }}</td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns"></tr>
+    </table>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Close</button>
+  </mat-dialog-actions>

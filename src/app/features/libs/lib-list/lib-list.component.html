@@ -17,6 +17,9 @@
         <mat-icon matListItemIcon>book</mat-icon>
         <span matListItemTitle>{{ b.title }}</span>
         <span matListItemLine>{{ b.isbn }} · {{ b.pubYear }}</span>
+        <button matListItemMeta mat-icon-button color="warn" (click)="unassignBookFromLib(l, b.id)">
+          <mat-icon>remove</mat-icon>
+        </button>
       </mat-list-item>
       <mat-list-item *ngIf="!l.books || l.books.length === 0">
         <span matListItemTitle style="color: gray">No books assigned</span>
@@ -30,6 +33,7 @@
       <button mat-icon-button color="warn" (click)="delete(l.id)">
         <mat-icon>delete</mat-icon>
       </button>
+      <button mat-flat-button color="primary" (click)="openAssignBooksDialog(l)">Add Books</button>
     </mat-action-row>
 
   </mat-expansion-panel>

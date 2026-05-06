@@ -1,20 +1,29 @@
+import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { NgFor, NgIf } from '@angular/common';
 import { Lib } from '../../../core/models/lib.model';
 import { LibService } from '../../../core/services/lib.service';
+import { AssignBooksDialogComponent } from '../assign-books-dialog/assign-books-dialog.component';
 import { LibFormComponent } from '../lib-form/lib-form.component';
 
 @Component({
   selector: 'app-lib-list.component',
   standalone: true,
-  imports: [MatExpansionModule, MatListModule, MatButtonModule, MatIconModule, MatToolbarModule, NgFor, NgIf],
+  imports: [
+    MatExpansionModule,
+    MatListModule,
+    MatButtonModule,
+    MatIconModule,
+    MatToolbarModule,
+    NgFor,
+    NgIf,
+  ],
   templateUrl: './lib-list.component.html',
   styleUrl: './lib-list.component.css',
 })
@@ -75,6 +84,13 @@ export class LibListComponent implements OnInit {
       });
   }
 
+  openAssignBooksDialog(lib: Lib) {
+    this.dialog
+      .open(AssignBooksDialogComponent, { data: lib, width: '500px' })
+      .afterClosed()
+      .subscribe(() => this.load());
+  }
+
   delete(id: number) {
     this.libService.delete(id).subscribe({
       next: () => {
@@ -83,6 +99,20 @@ export class LibListComponent implements OnInit {
       },
       error: () =>
         this.snackBar.open('An error occured while trying to delete', 'OK', { duration: 3000 }),
+    });
+  }
+
+  unassignBookFromLib(lib: Lib, bookId: number): void {
+    this.libService.unassignBook(lib.id, bookId).subscribe({
+      next: () => {
+        lib.books = lib.books.filter((b) => b.id !== bookId);
+        this.cdr.detectChanges();
+        this.snackBar.open('Book unassigned', 'OK', { duration: 3000 });
+      },
+      error: () =>
+        this.snackBar.open('An error occurred while trying to unassign the book', 'OK', {
+          duration: 3000,
+        }),
     });
   }
 }

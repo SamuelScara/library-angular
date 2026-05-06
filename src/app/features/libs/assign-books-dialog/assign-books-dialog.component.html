@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Assign Books - {{ lib.name }}</h2>
+
+<mat-dialog-content>
+  <mat-list>
+    <mat-list-item *ngFor="let b of availableBooks">
+      <mat-icon matListItemIcon>book</mat-icon>
+      <span matListItemTitle>{{ b.title }}</span>
+      <span matListItemLine>{{ b.isbn }} - {{ b.pubYear }}</span>
+      <button matListItemMeta mat-icon-button color="primary" (click)="assign(b)">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-list-item>
+    <mat-list-item *ngIf="availableBooks.length === 0">
+      <span matListItemTitle style="color: gray">No books available to add</span>
+    </mat-list-item>
+  </mat-list>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

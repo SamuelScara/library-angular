@@ -25,4 +25,16 @@ export class LibService {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
+
+  assignBook(libId: number, bookId: number): Observable<string> {
+    return this.http.post(`${this.baseUrl}/${libId}/books/${bookId}`, null, {
+      responseType: 'text',
+    });
+  }
+
+  unassignBook(libId: number, bookId: number): Observable<string> {
+    return this.http.delete(`${this.baseUrl}/${libId}/books/${bookId}`, {
+      responseType: 'text',
+    });
+  }
 }

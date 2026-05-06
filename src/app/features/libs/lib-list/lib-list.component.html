@@ -1,0 +1,36 @@
+<mat-toolbar>
+  <span>Libraries</span>
+  <span style="flex: 1"></span>
+  <button mat-flat-button color="primary" (click)="openForm()">Add</button>
+</mat-toolbar>
+
+<mat-accordion>
+  <mat-expansion-panel *ngFor="let l of libs">
+
+    <mat-expansion-panel-header>
+      <mat-panel-title>{{ l.name }}</mat-panel-title>
+      <mat-panel-description>{{ l.city }} — {{ l.address }}</mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-list>
+      <mat-list-item *ngFor="let b of l.books">
+        <mat-icon matListItemIcon>book</mat-icon>
+        <span matListItemTitle>{{ b.title }}</span>
+        <span matListItemLine>{{ b.isbn }} · {{ b.pubYear }}</span>
+      </mat-list-item>
+      <mat-list-item *ngIf="!l.books || l.books.length === 0">
+        <span matListItemTitle style="color: gray">No books assigned</span>
+      </mat-list-item>
+    </mat-list>
+
+    <mat-action-row>
+      <button mat-icon-button color="primary" (click)="openEditForm(l)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" (click)="delete(l.id)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-action-row>
+
+  </mat-expansion-panel>
+</mat-accordion>

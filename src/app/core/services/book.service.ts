@@ -29,4 +29,16 @@ export class BookService {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
+
+  assignAuthor(bookId: number, authorId: number): Observable<string> {
+    return this.http.post(`${this.baseUrl}/${bookId}/authors/${authorId}`, null, {
+      responseType: 'text',
+    });
+  }
+
+  unassignAuthor(bookId: number, authorId: number): Observable<string> {
+    return this.http.delete(`${this.baseUrl}/${bookId}/authors/${authorId}`, {
+      responseType: 'text',
+    });
+  }
 }

@@ -16,6 +16,37 @@
       <input matInput type="number" formControlName="pubYear" />
     </mat-form-field>
   </form>
+
+  <p><strong>Assigned authors</strong></p>
+  <mat-list>
+    <mat-list-item *ngFor="let a of currentAuthors">
+      <mat-icon matListItemIcon>person</mat-icon>
+      <span matListItemTitle>{{ a.firstName }} {{ a.lastName }}</span>
+      <span matListItemLine>{{ a.nationality }}</span>
+      <button matListItemMeta mat-icon-button color="warn" (click)="removeAuthor(a)">
+        <mat-icon>remove</mat-icon>
+      </button>
+    </mat-list-item>
+    <mat-list-item *ngIf="currentAuthors.length === 0">
+      <span matListItemTitle style="color: gray;">No authors assigned</span>
+    </mat-list-item>
+  </mat-list>
+
+  <p><strong>Available authors</strong></p>
+  <mat-list>
+    <mat-list-item *ngFor="let a of availableAuthors">
+      <mat-icon matListItemIcon>person</mat-icon>
+      <span matListItemTitle>{{ a.firstName }} {{ a.lastName }}</span>
+      <span matListItemLine>{{ a.nationality }}</span>
+      <button matListItemMeta mat-icon-button color="warn" (click)="assignAuthor(a)">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-list-item>
+    <mat-list-item *ngIf="availableAuthors.length === 0">
+      <span matListItemTitle style="color: gray;">No authors available</span>
+    </mat-list-item>
+  </mat-list>
+
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button (click)="dialogRef.close()">Cancel</button>

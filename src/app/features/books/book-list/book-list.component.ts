@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { forkJoin } from 'rxjs';
 import { Book } from '../../../core/models/book.model';
 import { BookService } from '../../../core/services/book.service';
 import { BookFormComponent } from '../book-form/book-form.component';
@@ -42,9 +43,17 @@ export class BookListComponent implements OnInit {
       .afterClosed()
       .subscribe((result) => {
         if (result) {
-          this.bookService.create(result).subscribe({
-            next: () => {
-              this.load();
+          const { selectedAuthorIds, ...bookData } = result;
+          this.bookService.create(bookData).subscribe({
+            next: (created) => {
+              const assignments = (selectedAuthorIds ?? []).map((authorId: number) =>
+                this.bookService.assignAuthor(created.id, authorId),
+              );
+              if (assignments.length > 0) {
+                forkJoin(assignments).subscribe(() => this.load());
+              } else {
+                this.load();
+              }
               this.snackBar.open('Book saved', 'OK', { duration: 3000 });
             },
             error: () =>

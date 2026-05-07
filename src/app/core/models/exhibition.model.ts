@@ -1,3 +1,5 @@
+import { Book } from './book.model';
+
 export interface Exhibition {
   id: number;
   title: string;
@@ -6,4 +8,5 @@ export interface Exhibition {
   simulationDate: Date;
   libId: number;
   bookIds: number[];
+  books: Book[];
 }

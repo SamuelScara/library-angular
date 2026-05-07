@@ -4,7 +4,7 @@
   <button mat-flat-button color="primary" (click)="openForm()">Add</button>
 </mat-toolbar>
 
-<table mat-table [dataSource]="exhibitions" style="width: 100%;">
+<table mat-table [dataSource]="exhibitions" multiTemplateDataRows style="width: 100%;">
 
   <ng-container matColumnDef="title">
     <th mat-header-cell *matHeaderCellDef>Title</th>
@@ -34,6 +34,9 @@
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let e">
+      <button mat-icon-button (click)="toggleExpand(e)">
+        <mat-icon>{{ expandedExhibition === e ? 'expand_less' : 'expand_more' }}</mat-icon>
+      </button>
       <button mat-icon-button color="primary" (click)="openEditForm(e)">
         <mat-icon>edit</mat-icon>
       </button>
@@ -46,6 +49,34 @@
     </td>
   </ng-container>
 
+  <ng-container matColumnDef="expandedDetail">
+    <td mat-cell *matCellDef="let e" [attr.colspan]="columns.length" class="expanded-cell">
+      <div *ngIf="expandedExhibition === e" class="expanded-panel">
+        <p *ngIf="!e.books?.length" class="no-books-msg">No books assigned to this exhibition.</p>
+        <div *ngIf="e.books?.length" class="books-grid">
+          <mat-card *ngFor="let b of e.books" class="book-card">
+            <mat-card-header>
+              <mat-card-title>{{ b.title }}</mat-card-title>
+              <mat-card-subtitle>ISBN: {{ b.isbn }} &nbsp;·&nbsp; Year: {{ b.pubYear }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="authors-label">Authors</div>
+              <mat-chip-set *ngIf="b.authors?.length; else noAuthors">
+                <mat-chip *ngFor="let a of b.authors" disabled>
+                  {{ a.firstName }} {{ a.lastName }}
+                </mat-chip>
+              </mat-chip-set>
+              <ng-template #noAuthors>
+                <span class="no-authors">—</span>
+              </ng-template>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </td>
+  </ng-container>
+
   <tr mat-header-row *matHeaderRowDef="columns"></tr>
   <tr mat-row *matRowDef="let row; columns: columns"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" style="height: 0"></tr>
 </table>

@@ -1,8 +1,12 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -14,7 +18,19 @@ import { SimulationResultDialogComponent } from '../simulation-result-dialog/sim
 @Component({
   selector: 'app-exhibition-list',
   standalone: true,
-  imports: [MatTableModule, MatButtonModule, MatIconModule, MatToolbarModule, DatePipe],
+  imports: [
+    MatTableModule,
+    MatButtonModule,
+    MatCardModule,
+    MatChipsModule,
+    MatIconModule,
+    MatToolbarModule,
+    DatePipe,
+    MatExpansionModule,
+    MatListModule,
+    NgIf,
+    NgFor,
+  ],
   templateUrl: './exhibition-list.component.html',
   styleUrl: './exhibition-list.component.css',
 })
@@ -26,6 +42,11 @@ export class ExhibitionListComponent implements OnInit {
 
   exhibitions: Exhibition[] = [];
   columns = ['title', 'libId', 'startDate', 'endDate', 'simulationDate', 'actions'];
+  expandedExhibition: Exhibition | null = null;
+
+  toggleExpand(exhibition: Exhibition): void {
+    this.expandedExhibition = this.expandedExhibition === exhibition ? null : exhibition;
+  }
 
   ngOnInit(): void {
     this.load();
@@ -49,8 +70,7 @@ export class ExhibitionListComponent implements OnInit {
               this.load();
               this.snackBar.open('Exhibition created', 'OK', { duration: 3000 });
             },
-            error: () =>
-              this.snackBar.open('Error creating exhibition', 'OK', { duration: 3000 }),
+            error: () => this.snackBar.open('Error creating exhibition', 'OK', { duration: 3000 }),
           });
         }
       });
@@ -67,8 +87,7 @@ export class ExhibitionListComponent implements OnInit {
               this.load();
               this.snackBar.open('Exhibition updated', 'OK', { duration: 3000 });
             },
-            error: () =>
-              this.snackBar.open('Error updating exhibition', 'OK', { duration: 3000 }),
+            error: () => this.snackBar.open('Error updating exhibition', 'OK', { duration: 3000 }),
           });
         }
       });

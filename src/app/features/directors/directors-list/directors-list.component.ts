@@ -9,6 +9,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Director } from '../../../core/models/director.model';
 import { DirectorService } from '../../../core/services/director.service';
+import { LibService } from '../../../core/services/lib.service';
+import { DirectorLibsDialogComponent } from '../director-libs-dialog/director-libs-dialog.component';
 import { DirectorsFormComponent } from '../directors-form/directors-form.component';
 
 @Component({
@@ -20,6 +22,7 @@ import { DirectorsFormComponent } from '../directors-form/directors-form.compone
 })
 export class DirectorsListComponent implements OnInit {
   private directorService = inject(DirectorService);
+  private libService = inject(LibService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
@@ -97,6 +100,18 @@ export class DirectorsListComponent implements OnInit {
               });
             },
           });
+        }
+      });
+  }
+
+  openAssignLibDialog(director: Director) {
+    this.dialog
+      .open(DirectorLibsDialogComponent, { data: director })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          director.lib = undefined; // invalidate cache so the next expand reloads
+          this.load();
         }
       });
   }

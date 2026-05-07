@@ -37,4 +37,10 @@ export class LibService {
       responseType: 'text',
     });
   }
+
+  reassignToLib(libId: number, directorId: number): Observable<string> {
+    return this.http.put(`${this.baseUrl}/${libId}/directors/${directorId}`, null, {
+      responseType: 'text',
+    });
+  }
 }

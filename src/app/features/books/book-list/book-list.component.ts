@@ -52,7 +52,7 @@ export class BookListComponent implements OnInit {
                 this.bookService.assignAuthor(created.id, authorId),
               );
               if (assignments.length > 0) {
-                forkJoin(assignments).subscribe(() => this.load()); // forkJoin
+                forkJoin(assignments).subscribe(() => this.load()); // forkJoin launches all the calls (in parallelo) and waits that all are completed before this.load()
               } else {
                 this.load();
               }

@@ -17,6 +17,9 @@
         <mat-icon matListItemIcon>book</mat-icon>
         <span matListItemTitle>{{ b.title }}</span>
         <span matListItemLine>{{ b.isbn }} · {{ b.pubYear }}</span>
+        <button matListItemMeta mat-icon-button color="warn" (click)="openBookInfoDialog(b)">
+          <mat-icon>info</mat-icon>
+        </button>
         <button matListItemMeta mat-icon-button color="warn" (click)="unassignBookFromLib(l, b.id)">
           <mat-icon>remove</mat-icon>
         </button>

@@ -7,8 +7,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { Book } from '../../../core/models/book.model';
 import { Lib } from '../../../core/models/lib.model';
+import { BookService } from '../../../core/services/book.service';
 import { LibService } from '../../../core/services/lib.service';
+import { BookInfoDialogComponent } from '../../books/book-info-dialog/book-info-dialog.component';
 import { AssignBooksDialogComponent } from '../assign-books-dialog/assign-books-dialog.component';
 import { LibFormComponent } from '../lib-form/lib-form.component';
 
@@ -29,6 +32,7 @@ import { LibFormComponent } from '../lib-form/lib-form.component';
 })
 export class LibListComponent implements OnInit {
   private libService = inject(LibService);
+  private bookService = inject(BookService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
@@ -89,6 +93,15 @@ export class LibListComponent implements OnInit {
       .open(AssignBooksDialogComponent, { data: lib, width: '500px' })
       .afterClosed()
       .subscribe(() => this.load());
+  }
+
+  openBookInfoDialog(book: Book) {
+    this.bookService.getById(book.id).subscribe({
+      next: (book) => {
+        this.dialog.open(BookInfoDialogComponent, { data: book, width: '600px' });
+      },
+      error: () => this.snackBar.open('Error retrieving book info', 'OK', { duration: 3000 }),
+    });
   }
 
   delete(id: number) {

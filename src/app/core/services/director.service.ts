@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Director } from '../models/director.model';
+import { Lib } from '../models/lib.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,10 @@ export class DirectorService {
 
   getAll(): Observable<Director[]> {
     return this.http.get<Director[]>(this.baseUrl);
+  }
+
+  getLib(directorId: number): Observable<Lib> {
+    return this.http.get<Lib>(`${this.baseUrl}/${directorId}/lib`);
   }
 
   create(director: Partial<Director>): Observable<Director> {

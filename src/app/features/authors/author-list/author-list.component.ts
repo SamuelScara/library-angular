@@ -7,6 +7,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Author } from '../../../core/models/author.model';
 import { AuthorService } from '../../../core/services/author.service';
+import { AuthorBooksDialogComponent } from '../author-books-dialog/author-books-dialog.component';
 import { AuthorFormComponent } from '../author-form/author-form.component';
 
 @Component({
@@ -72,6 +73,10 @@ export class AuthorListComponent {
           });
         }
       });
+  }
+
+  openBooksDialog(author: Author) {
+    this.dialog.open(AuthorBooksDialogComponent, { data: author, width: '600px' });
   }
 
   delete(id: number) {

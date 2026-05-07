@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Author } from '../models/author.model';
+import { Book } from '../models/book.model';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,10 @@ export class AuthorService {
 
   getById(id: number): Observable<Author> {
     return this.http.get<Author>(`${this.baseUrl}/${id}`);
+  }
+
+  getBooks(authorId: number): Observable<Book[]> {
+    return this.http.get<Book[]>(`${this.baseUrl}/${authorId}/books`);
   }
 
   create(author: Partial<Author>): Observable<Author> {

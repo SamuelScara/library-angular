@@ -4,7 +4,15 @@
   <button mat-flat-button color="primary" (click)="openForm()">Add</button>
 </mat-toolbar>
 
-<table mat-table [dataSource]="books" style="width: 100%;">
+<div style="padding: 16px 16px 0">
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Search books</mat-label>
+      <input matInput [formControl]="search" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+<table mat-table [dataSource]="filteredBooks" style="width: 100%;">
 
   <ng-container matColumnDef="title">
     <th mat-header-cell *matHeaderCellDef>Title</th>

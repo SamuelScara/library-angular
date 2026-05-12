@@ -1,7 +1,10 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -13,7 +16,15 @@ import { BookFormComponent } from '../book-form/book-form.component';
 @Component({
   selector: 'app-book-list-component',
   standalone: true,
-  imports: [MatTableModule, MatButtonModule, MatIconModule, MatToolbarModule],
+  imports: [
+    ReactiveFormsModule,
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
   templateUrl: './book-list.component.html',
   styleUrl: './book-list.component.css',
 })
@@ -25,6 +36,24 @@ export class BookListComponent implements OnInit {
 
   books: Book[] = [];
   columns = ['title', 'isbn', 'pubYear', 'authors', 'availability', 'actions'];
+  search = new FormControl('');
+
+  get filteredBooks(): Book[] {
+    const q = (this.search.value ?? '').toLowerCase().trim();
+    if (!q) return this.books;
+    return this.books.filter((b) => {
+      const authors = (b.authors ?? []).map((a) => `${a.firstName} ${a.lastName}`).join(' ');
+      return (
+        b.title.toLowerCase().includes(q) ||
+        b.isbn.toLowerCase().includes(q) ||
+        String(b.pubYear).includes(q) ||
+        String(b.availability ?? '')
+          .toLowerCase()
+          .includes(q) ||
+        authors.toLowerCase().includes(q)
+      );
+    });
+  }
 
   ngOnInit(): void {
     this.load();

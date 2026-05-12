@@ -8,6 +8,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { forkJoin } from 'rxjs';
 import { Book } from '../../../core/models/book.model';
 import { BookService } from '../../../core/services/book.service';
+import { AssignAuthorDialogComponent } from '../assign-author-dialog/assign-author-dialog.component';
 import { BookFormComponent } from '../book-form/book-form.component';
 
 @Component({
@@ -82,6 +83,15 @@ export class BookListComponent implements OnInit {
               }),
           });
         }
+      });
+  }
+
+  openAssignAuthorDialog(book: Book) {
+    this.dialog
+      .open(AssignAuthorDialogComponent, { data: book })
+      .afterClosed()
+      .subscribe((changed) => {
+        if (changed) this.load();
       });
   }
 

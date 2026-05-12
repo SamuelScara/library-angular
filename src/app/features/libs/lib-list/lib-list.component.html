@@ -9,7 +9,11 @@
 
     <mat-expansion-panel-header>
       <mat-panel-title>{{ l.name }}</mat-panel-title>
-      <mat-panel-description>{{ l.city }} — {{ l.address }}</mat-panel-description>
+      <mat-panel-description >
+        <ng-container *ngIf="l.director"> <strong>Director:</strong>&nbsp; {{ l.director.firstName }} {{ l.director.lastName }}</ng-container>
+        <ng-container *ngIf="!l.director"> No director</ng-container>
+      </mat-panel-description>
+      <mat-panel-description><strong>Address:</strong>&nbsp; {{ l.city }} — {{ l.address }}</mat-panel-description>
     </mat-expansion-panel-header>
 
     <mat-list>
@@ -32,6 +36,9 @@
     <mat-action-row>
       <button mat-icon-button color="primary" (click)="openEditForm(l)">
         <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="primary" (click)="openAssignDirectorDialog(l)">
+        <mat-icon>person</mat-icon>
       </button>
       <button mat-icon-button color="warn" (click)="delete(l.id)">
         <mat-icon>delete</mat-icon>

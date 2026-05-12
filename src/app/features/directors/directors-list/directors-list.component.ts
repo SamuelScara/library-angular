@@ -58,7 +58,7 @@ export class DirectorsListComponent implements OnInit {
   load() {
     this.directorService.getAll().subscribe((data) => {
       this.directors = data;
-      this.cdr.markForCheck();
+      this.cdr.detectChanges();
     });
   }
 

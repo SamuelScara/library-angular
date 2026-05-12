@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>
+    Assign Director — {{ lib.name }}
+  </h2>
+
+  <mat-dialog-content>
+
+    <div *ngIf="pendingDirector" class="confirm-banner">
+      <mat-icon color="warn">warning</mat-icon>
+      <span>
+        <strong>{{ pendingDirector.firstName }} {{ pendingDirector.lastName }}</strong>
+        is currently assigned to another library
+        Proceeding will unassign them.
+      </span>
+      <div class="confirm-actions">
+        <button mat-flat-button color="warn" (click)="confirmReassign()">Confirm</button>
+        <button mat-button (click)="cancelReassign()">Cancel</button>
+      </div>
+    </div>
+
+    <mat-list>
+      <mat-list-item *ngFor="let d of directors">
+        <mat-icon matListItemIcon [color]="d.libId ? 'warn' : ''">
+          {{ d.libId ? 'business' : 'person' }}
+        </mat-icon>
+        <span matListItemTitle>{{ d.firstName }} {{ d.lastName }}</span>
+        <span matListItemLine>
+          {{ d.email }}
+          <ng-container *ngIf="d.lib"> · {{ d.lib.name }}</ng-container>
+          <ng-container *ngIf="!d.lib && d.libId"> - assigned to another library</ng-container>
+          <ng-container *ngIf="!d.libId"> - No library</ng-container>
+        </span>
+        <button matListItemMeta mat-icon-button
+                [color]="d.libId ? 'warn' : 'primary'"
+                (click)="assign(d)">
+          <mat-icon>{{ d.libId ? 'swap_horiz' : 'add' }}</mat-icon>
+        </button>
+      </mat-list-item>
+
+      <mat-list-item *ngIf="directors.length === 0">
+        <span matListItemTitle style="color: gray">No directors available</span>
+      </mat-list-item>
+    </mat-list>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Close</button>
+  </mat-dialog-actions>

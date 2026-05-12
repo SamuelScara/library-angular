@@ -10,10 +10,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { Book } from '../../../core/models/book.model';
 import { Lib } from '../../../core/models/lib.model';
 import { BookService } from '../../../core/services/book.service';
+import { DirectorService } from '../../../core/services/director.service';
 import { LibService } from '../../../core/services/lib.service';
 import { BookInfoDialogComponent } from '../../books/book-info-dialog/book-info-dialog.component';
 import { AssignBooksDialogComponent } from '../assign-books-dialog/assign-books-dialog.component';
 import { LibFormComponent } from '../lib-form/lib-form.component';
+import { LibsDirectorDialogComponent } from '../libs-director-dialog/libs-director-dialog.component';
 
 @Component({
   selector: 'app-lib-list.component',
@@ -33,6 +35,7 @@ import { LibFormComponent } from '../lib-form/lib-form.component';
 export class LibListComponent implements OnInit {
   private libService = inject(LibService);
   private bookService = inject(BookService);
+  private directorService = inject(DirectorService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
@@ -46,7 +49,7 @@ export class LibListComponent implements OnInit {
   load() {
     this.libService.getAll().subscribe((data) => {
       this.libs = data;
-      this.cdr.markForCheck();
+      this.cdr.detectChanges();
     });
   }
 
@@ -102,6 +105,15 @@ export class LibListComponent implements OnInit {
       },
       error: () => this.snackBar.open('Error retrieving book info', 'OK', { duration: 3000 }),
     });
+  }
+
+  openAssignDirectorDialog(lib: Lib) {
+    this.dialog
+      .open(LibsDirectorDialogComponent, { data: lib, width: '500px' })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) this.load();
+      });
   }
 
   delete(id: number) {

@@ -4,7 +4,20 @@
   <button mat-flat-button color="primary" (click)="openForm()">Add</button>
 </mat-toolbar>
 
-<table mat-table [dataSource]="authors" style="width: 100%;">
+<div style="display: flex; gap: 16px; padding: 16px 16px 0">
+    <mat-form-field appearance="outline" style="flex: 1">
+      <mat-label>Search by author</mat-label>
+      <input matInput [formControl]="authorSearch" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+    <mat-form-field appearance="outline" style="flex: 1">
+      <mat-label>Search by book</mat-label>
+      <input matInput [formControl]="bookSearch" />
+      <mat-icon matSuffix>book</mat-icon>
+    </mat-form-field>
+  </div>
+
+<table mat-table [dataSource]="filteredAuthors" style="width: 100%;">
 
   <ng-container matColumnDef="firstName">
     <th mat-header-cell *matHeaderCellDef>First name</th>

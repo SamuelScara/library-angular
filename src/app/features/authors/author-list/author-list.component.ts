@@ -1,7 +1,10 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -14,7 +17,15 @@ import { AuthorFormComponent } from '../author-form/author-form.component';
 @Component({
   selector: 'app-author-list-component',
   standalone: true,
-  imports: [MatTableModule, MatButtonModule, MatIconModule, MatToolbarModule],
+  imports: [
+    ReactiveFormsModule,
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
   templateUrl: './author-list.component.html',
   styleUrl: './author-list.component.css',
 })
@@ -26,6 +37,22 @@ export class AuthorListComponent implements OnInit {
 
   authors: Author[] = [];
   columns = ['firstName', 'lastName', 'nationality', 'actions'];
+  authorSearch = new FormControl('');
+  bookSearch = new FormControl('');
+
+  get filteredAuthors(): Author[] {
+    const author = (this.authorSearch.value ?? '').toLowerCase().trim();
+    const book = (this.bookSearch.value ?? '').toLowerCase().trim();
+    return this.authors.filter((a) => {
+      const matchAuthor =
+        !author ||
+        a.firstName.toLowerCase().includes(author) ||
+        a.lastName.toLowerCase().includes(author) ||
+        (a.nationality ?? '').toLowerCase().includes(author);
+      const matchBook = !book || (a.books ?? []).some((b) => b.title.toLowerCase().includes(book));
+      return matchAuthor && matchBook;
+    });
+  }
 
   ngOnInit(): void {
     this.load();

@@ -33,17 +33,28 @@
   </mat-list>
 
   <p><strong>Available authors</strong></p>
+
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Search</mat-label>
+    <input matInput [formControl]="searchControl" placeholder="Name..." />
+    <button *ngIf="searchControl.value" matSuffix mat-icon-button (click)="searchControl.reset()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+
   <mat-list>
-    <mat-list-item *ngFor="let a of availableAuthors">
+    <mat-list-item *ngFor="let a of filteredAuthors">
       <mat-icon matListItemIcon>person</mat-icon>
       <span matListItemTitle>{{ a.firstName }} {{ a.lastName }}</span>
       <span matListItemLine>{{ a.nationality }}</span>
-      <button matListItemMeta mat-icon-button color="warn" (click)="assignAuthor(a)">
+      <button matListItemMeta mat-icon-button color="primary" (click)="assignAuthor(a)">
         <mat-icon>add</mat-icon>
       </button>
     </mat-list-item>
-    <mat-list-item *ngIf="availableAuthors.length === 0">
-      <span matListItemTitle style="color: gray;">No authors available</span>
+    <mat-list-item *ngIf="filteredAuthors.length === 0">
+      <span matListItemTitle style="color: gray">
+        {{ searchControl.value ? 'No results for "' + searchControl.value + '"' : 'No authors available' }}
+      </span>
     </mat-list-item>
   </mat-list>
 

@@ -1,5 +1,6 @@
+import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,7 +8,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NgFor, NgIf } from '@angular/common';
 import { Author } from '../../../core/models/author.model';
 import { Book } from '../../../core/models/book.model';
 import { AuthorService } from '../../../core/services/author.service';
@@ -48,6 +48,7 @@ export class BookFormComponent implements OnInit {
 
   currentAuthors: Author[] = [...(this.data?.authors ?? [])];
   availableAuthors: Author[] = [];
+  searchControl = new FormControl('');
 
   get isEdit(): boolean {
     return !!this.data;
@@ -91,6 +92,14 @@ export class BookFormComponent implements OnInit {
       this.currentAuthors = this.currentAuthors.filter((a) => a.id !== author.id);
       this.availableAuthors = [...this.availableAuthors, author];
     }
+  }
+
+  get filteredAuthors(): Author[] {
+    const q = (this.searchControl.value ?? '').toLowerCase().trim();
+    if (!q) return this.availableAuthors;
+    return this.availableAuthors.filter((a) =>
+      `${a.firstName} ${a.lastName}`.toLowerCase().includes(q),
+    );
   }
 
   submit(): void {

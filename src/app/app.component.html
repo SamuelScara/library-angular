@@ -1,2 +1,5 @@
 <app-navbar-component />
+@if (isLoading$ | async) {
+  <mat-progress-bar mode="indeterminate" />
+}
 <router-outlet />

@@ -55,7 +55,7 @@ export class ExhibitionListComponent implements OnInit {
   load(): void {
     this.exhibitionService.getAll().subscribe((data) => {
       this.exhibitions = data;
-      this.cdr.markForCheck();
+      this.cdr.detectChanges();
     });
   }
 
@@ -70,7 +70,6 @@ export class ExhibitionListComponent implements OnInit {
               this.load();
               this.snackBar.open('Exhibition created', 'OK', { duration: 3000 });
             },
-            error: () => this.snackBar.open('Error creating exhibition', 'OK', { duration: 3000 }),
           });
         }
       });
@@ -87,7 +86,6 @@ export class ExhibitionListComponent implements OnInit {
               this.load();
               this.snackBar.open('Exhibition updated', 'OK', { duration: 3000 });
             },
-            error: () => this.snackBar.open('Error updating exhibition', 'OK', { duration: 3000 }),
           });
         }
       });
@@ -99,7 +97,6 @@ export class ExhibitionListComponent implements OnInit {
         this.load();
         this.snackBar.open('Exhibition deleted', 'OK', { duration: 3000 });
       },
-      error: () => this.snackBar.open('Error deleting exhibition', 'OK', { duration: 3000 }),
     });
   }
 
@@ -109,7 +106,6 @@ export class ExhibitionListComponent implements OnInit {
         this.load();
         this.dialog.open(SimulationResultDialogComponent, { data: result, width: '600px' });
       },
-      error: () => this.snackBar.open('Error running simulation', 'OK', { duration: 3000 }),
     });
   }
 }

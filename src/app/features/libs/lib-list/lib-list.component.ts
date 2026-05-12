@@ -10,7 +10,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { Book } from '../../../core/models/book.model';
 import { Lib } from '../../../core/models/lib.model';
 import { BookService } from '../../../core/services/book.service';
-import { DirectorService } from '../../../core/services/director.service';
 import { LibService } from '../../../core/services/lib.service';
 import { BookInfoDialogComponent } from '../../books/book-info-dialog/book-info-dialog.component';
 import { AssignBooksDialogComponent } from '../assign-books-dialog/assign-books-dialog.component';
@@ -35,7 +34,6 @@ import { LibsDirectorDialogComponent } from '../libs-director-dialog/libs-direct
 export class LibListComponent implements OnInit {
   private libService = inject(LibService);
   private bookService = inject(BookService);
-  private directorService = inject(DirectorService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
@@ -64,8 +62,6 @@ export class LibListComponent implements OnInit {
               this.load();
               this.snackBar.open('Library saved', 'OK', { duration: 3000 });
             },
-            error: () =>
-              this.snackBar.open('An error occured while trying to save', 'OK', { duration: 3000 }),
           });
         }
       });
@@ -82,10 +78,6 @@ export class LibListComponent implements OnInit {
               this.load();
               this.snackBar.open('Library has been edited', 'OK', { duration: 3000 });
             },
-            error: () =>
-              this.snackBar.open('An error occured while trying to update the library', 'OK', {
-                duration: 3000,
-              }),
           });
         }
       });
@@ -100,10 +92,7 @@ export class LibListComponent implements OnInit {
 
   openBookInfoDialog(book: Book) {
     this.bookService.getById(book.id).subscribe({
-      next: (book) => {
-        this.dialog.open(BookInfoDialogComponent, { data: book, width: '600px' });
-      },
-      error: () => this.snackBar.open('Error retrieving book info', 'OK', { duration: 3000 }),
+      next: (b) => this.dialog.open(BookInfoDialogComponent, { data: b, width: '600px' }),
     });
   }
 
@@ -122,8 +111,6 @@ export class LibListComponent implements OnInit {
         this.load();
         this.snackBar.open('Library deleted', 'OK', { duration: 3000 });
       },
-      error: () =>
-        this.snackBar.open('An error occured while trying to delete', 'OK', { duration: 3000 }),
     });
   }
 
@@ -134,10 +121,6 @@ export class LibListComponent implements OnInit {
         this.cdr.detectChanges();
         this.snackBar.open('Book unassigned', 'OK', { duration: 3000 });
       },
-      error: () =>
-        this.snackBar.open('An error occurred while trying to unassign the book', 'OK', {
-          duration: 3000,
-        }),
     });
   }
 }

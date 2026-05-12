@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,7 +18,7 @@ import { AuthorFormComponent } from '../author-form/author-form.component';
   templateUrl: './author-list.component.html',
   styleUrl: './author-list.component.css',
 })
-export class AuthorListComponent {
+export class AuthorListComponent implements OnInit {
   private authorService = inject(AuthorService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
@@ -34,7 +34,7 @@ export class AuthorListComponent {
   load() {
     this.authorService.getAll().subscribe((data) => {
       this.authors = data;
-      this.cdr.markForCheck();
+      this.cdr.detectChanges();
     });
   }
 
@@ -49,8 +49,6 @@ export class AuthorListComponent {
               this.load();
               this.snackBar.open('Author saved', 'OK', { duration: 3000 });
             },
-            error: () =>
-              this.snackBar.open('An error occured while trying to save', 'OK', { duration: 3000 }),
           });
         }
       });
@@ -67,10 +65,6 @@ export class AuthorListComponent {
               this.load();
               this.snackBar.open('Author has been edited', 'OK', { duration: 3000 });
             },
-            error: () =>
-              this.snackBar.open('An error occured while trying to update the author', 'OK', {
-                duration: 3000,
-              }),
           });
         }
       });
@@ -95,8 +89,6 @@ export class AuthorListComponent {
         this.load();
         this.snackBar.open('Author deleted', 'OK', { duration: 3000 });
       },
-      error: () =>
-        this.snackBar.open('An error occured while trying to delete', 'OK', { duration: 3000 }),
     });
   }
 }

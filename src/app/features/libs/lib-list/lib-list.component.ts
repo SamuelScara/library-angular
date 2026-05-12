@@ -1,9 +1,12 @@
 import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -20,11 +23,14 @@ import { LibsDirectorDialogComponent } from '../libs-director-dialog/libs-direct
   selector: 'app-lib-list.component',
   standalone: true,
   imports: [
+    ReactiveFormsModule,
     MatExpansionModule,
     MatListModule,
     MatButtonModule,
     MatIconModule,
     MatToolbarModule,
+    MatFormFieldModule,
+    MatInputModule,
     NgFor,
     NgIf,
   ],
@@ -39,6 +45,19 @@ export class LibListComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   libs: Lib[] = [];
+  nameSearch = new FormControl('');
+  bookSearch = new FormControl('');
+
+  get filteredLibs(): Lib[] {
+    const name = (this.nameSearch.value ?? '').toLowerCase().trim();
+    const book = (this.bookSearch.value ?? '').toLowerCase().trim();
+
+    return this.libs.filter((l) => {
+      const matchName = !name || l.name.toLowerCase().includes(name);
+      const matchBook = !book || l.books.some((b) => b.title.toLowerCase().includes(book));
+      return matchName && matchBook;
+    });
+  }
 
   ngOnInit(): void {
     this.load();

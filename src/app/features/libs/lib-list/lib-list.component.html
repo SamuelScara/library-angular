@@ -4,8 +4,21 @@
   <button mat-flat-button color="primary" (click)="openForm()">Add</button>
 </mat-toolbar>
 
+<div style="display: flex; gap: 16px; padding: 16px 16px 0">
+    <mat-form-field appearance="outline" style="flex: 1">
+      <mat-label>Search by name</mat-label>
+      <input matInput [formControl]="nameSearch" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+    <mat-form-field appearance="outline" style="flex: 1">
+      <mat-label>Search by book</mat-label>
+      <input matInput [formControl]="bookSearch" />
+      <mat-icon matSuffix>book</mat-icon>
+    </mat-form-field>
+  </div>
+
 <mat-accordion>
-  <mat-expansion-panel *ngFor="let l of libs">
+  <mat-expansion-panel *ngFor="let l of filteredLibs">
 
     <mat-expansion-panel-header>
       <mat-panel-title>{{ l.name }}</mat-panel-title>

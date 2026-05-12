@@ -1,0 +1,47 @@
+<h2 mat-dialog-title>Manage Author — {{ author.firstName }} {{ author.lastName }}</h2>
+
+  <mat-dialog-content>
+
+    <p><strong>Assigned books</strong></p>
+    <mat-list>
+      <mat-list-item *ngFor="let b of currentBooks">
+        <mat-icon matListItemIcon>person</mat-icon>
+        <span matListItemTitle>{{ b.title }} </span>
+        <button matListItemMeta mat-icon-button color="warn" (click)="unassignBook(b)">
+          <mat-icon>remove</mat-icon>
+        </button>
+      </mat-list-item>
+      <mat-list-item *ngIf="currentBooks.length === 0">
+        <span matListItemTitle style="color: gray">No books assigned</span>
+      </mat-list-item>
+    </mat-list>
+
+    <p><strong>Available books</strong></p>
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Search</mat-label>
+      <input matInput [formControl]="searchControl" placeholder="Name..." />
+      <button *ngIf="searchControl.value" matSuffix mat-icon-button (click)="searchControl.reset()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <mat-list>
+      <mat-list-item *ngFor="let b of filteredBooks">
+        <mat-icon matListItemIcon>person</mat-icon>
+        <span matListItemTitle>{{ b.title }}</span>
+        <button matListItemMeta mat-icon-button color="primary" (click)="assignBook(b)">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-list-item>
+      <mat-list-item *ngIf="filteredBooks.length === 0">
+        <span matListItemTitle style="color: gray">
+          {{ searchControl.value ? 'No results for "' + searchControl.value + '"' : 'No books available' }}
+        </span>
+      </mat-list-item>
+    </mat-list>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-flat-button (click)="close()">Close</button>
+  </mat-dialog-actions>

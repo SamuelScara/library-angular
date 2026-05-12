@@ -7,6 +7,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Author } from '../../../core/models/author.model';
 import { AuthorService } from '../../../core/services/author.service';
+import { AssignBookDialogComponent } from '../assign-book-dialog/assign-book-dialog.component';
 import { AuthorBooksDialogComponent } from '../author-books-dialog/author-books-dialog.component';
 import { AuthorFormComponent } from '../author-form/author-form.component';
 
@@ -77,6 +78,15 @@ export class AuthorListComponent {
 
   openBooksDialog(author: Author) {
     this.dialog.open(AuthorBooksDialogComponent, { data: author, width: '600px' });
+  }
+
+  openAssignBooksDialog(author: Author) {
+    this.dialog
+      .open(AssignBookDialogComponent, { data: author })
+      .afterClosed()
+      .subscribe((changed) => {
+        if (changed) this.load();
+      });
   }
 
   delete(id: number) {

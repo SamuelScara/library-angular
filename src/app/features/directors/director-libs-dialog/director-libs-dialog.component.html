@@ -1,49 +1,51 @@
 <h2 mat-dialog-title>
     Assign Library — {{ director.firstName }} {{ director.lastName }}
-  </h2>                                                              
-                                                                                                                                                                                             
+</h2>
+
   <mat-dialog-content>
-                                                                                                                                                                                             
+
     <div *ngIf="pendingLib" class="confirm-banner">
       <mat-icon color="warn">warning</mat-icon>    
-      <span>                                   
+      <span>
         <strong>{{ pendingLib.name }}</strong> is currently directed by
-        <strong>{{ pendingLib.director?.firstName }} {{ pendingLib.director?.lastName }}</strong>.                                                                                           
-        Proceeding will unassign them.                                                            
-      </span>                                                                                                                                                                                
+        <strong>{{ pendingLib.director?.firstName }} {{ pendingLib.director?.lastName }}</strong>.
+        Proceeding will unassign them.
+      </span>
       <div class="confirm-actions">
-        <button mat-flat-button color="warn" (click)="confirmReassign()">Confirm</button>                                                                                                    
+        <button mat-flat-button color="warn" (click)="confirmReassign()">Confirm</button>
         <button mat-button (click)="cancelReassign()">Cancel</button>                    
-      </div>                                                                                                                                                                                 
+      </div>
     </div>  
-                                                                                                                                                                                             
+
     <mat-list>    
-      <mat-list-item *ngFor="let lib of libs">                                                                                                                                               
+      <mat-list-item *ngFor="let lib of libs">
         <mat-icon matListItemIcon color="{{ lib.director ? 'warn' : '' }}">
           {{ lib.director ? 'person' : 'business' }}                                                                                                                                         
         </mat-icon>                                 
-        <span matListItemTitle>{{ lib.name }}</span>                                                                                                                                         
-        <span matListItemLine>                      
-          {{ lib.city }}                                                                                                                                                                     
+        <span matListItemTitle>{{ lib.name }}</span>
+        <span matListItemLine>
+          {{ lib.city }}
           <ng-container *ngIf="lib.director">
             · {{ lib.director.firstName }} {{ lib.director.lastName }}
-          </ng-container>                                                                                                                                                                    
+          </ng-container>
           <ng-container *ngIf="!lib.director">· No director</ng-container>
-        </span>                                                                                                                                                                              
-        <button matListItemMeta mat-icon-button                                                                                                                                              
+        </span>
+        <button matListItemMeta mat-icon-button
                 [color]="lib.director ? 'warn' : 'primary'"
-                (click)="assign(lib)">                                                                                                                                                       
+                (click)="assign(lib)">
           <mat-icon>{{ lib.director ? 'swap_horiz' : 'add' }}</mat-icon>
-        </button>                                                       
-      </mat-list-item>                                                                                                                                                                       
-                      
-      <mat-list-item *ngIf="libs.length === 0">                                                                                                                                              
-        <span matListItemTitle style="color: gray">No libraries available</span>
-      </mat-list-item>                                                          
-    </mat-list>                                                                                                                                                                              
-               
-  </mat-dialog-content>                                                                                                                                                                      
-                       
+        </button>
+      </mat-list-item>
+
+      <mat-list-item *ngIf="libs.length === 0">
+        <mat-list-item>
+          <span matListItemTitle style="color: gray">No libraries available</span>
+        </mat-list-item>
+      </mat-list-item>
+    </mat-list>
+
+  </mat-dialog-content>
+
   <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Close</button>
   </mat-dialog-actions>

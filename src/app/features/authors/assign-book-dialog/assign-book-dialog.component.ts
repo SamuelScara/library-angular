@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { forkJoin } from 'rxjs';
 import { Author, BookSummary } from '../../../core/models/author.model';
 import { AuthorService } from '../../../core/services/author.service';
 import { BookService } from '../../../core/services/book.service';
@@ -35,17 +36,23 @@ export class AssignBookDialogComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
   private dialogRef = inject(MatDialogRef);
-  private changed = false;
 
   author: Author = inject(MAT_DIALOG_DATA);
   currentBooks: BookSummary[] = [...(this.author?.books ?? [])];
   availableBooks: BookSummary[] = [];
   searchControl = new FormControl('');
 
+  pendingAdd: BookSummary[] = [];
+  pendingRemove: BookSummary[] = [];
+
+  get hasPendingChanges(): boolean {
+    return this.pendingAdd.length > 0 || this.pendingRemove.length > 0;
+  }
+
   get filteredBooks(): BookSummary[] {
     const q = (this.searchControl.value ?? '').toLowerCase().trim();
     if (!q) return this.availableBooks;
-    return this.availableBooks.filter((b) => `${b.title}`.toLowerCase().includes(q));
+    return this.availableBooks.filter((b) => b.title.toLowerCase().includes(q));
   }
 
   ngOnInit(): void {
@@ -59,31 +66,41 @@ export class AssignBookDialogComponent implements OnInit {
     });
   }
 
-  assignBook(book: BookSummary): void {
-    this.bookService.assignAuthor(book.id, this.author.id).subscribe({
-      next: () => {
-        this.currentBooks = [...this.currentBooks, book];
-        this.availableBooks = this.availableBooks.filter((b) => b.id !== book.id);
-        this.changed = true;
-        this.cdr.detectChanges();
-      },
-      error: () => this.snackBar.open('Error assigning book', 'OK', { duration: 3000 }),
-    });
+  stageAdd(book: BookSummary): void {
+    this.pendingRemove = this.pendingRemove.filter((b) => b.id !== book.id);
+    if (!this.pendingAdd.find((b) => b.id === book.id)) {
+      this.pendingAdd = [...this.pendingAdd, book];
+    }
+    this.currentBooks = [...this.currentBooks, book];
+    this.availableBooks = this.availableBooks.filter((b) => b.id !== book.id);
+    this.cdr.detectChanges();
   }
 
-  unassignBook(book: BookSummary): void {
-    this.bookService.unassignAuthor(book.id, this.author.id).subscribe({
+  stageRemove(book: BookSummary): void {
+    this.pendingAdd = this.pendingAdd.filter((b) => b.id !== book.id);
+    if (!this.pendingRemove.find((b) => b.id === book.id)) {
+      this.pendingRemove = [...this.pendingRemove, book];
+    }
+    this.currentBooks = this.currentBooks.filter((b) => b.id !== book.id);
+    this.availableBooks = [...this.availableBooks, book];
+    this.cdr.detectChanges();
+  }
+
+  save(): void {
+    const calls = [
+      ...this.pendingAdd.map((b) => this.bookService.assignAuthor(b.id, this.author.id)),
+      ...this.pendingRemove.map((b) => this.bookService.unassignAuthor(b.id, this.author.id)),
+    ];
+    forkJoin(calls).subscribe({
       next: () => {
-        this.currentBooks = this.currentBooks.filter((b) => b.id !== book.id);
-        this.availableBooks = [...this.availableBooks, book];
-        this.changed = true;
-        this.cdr.detectChanges();
+        this.snackBar.open('Books updated', 'OK', { duration: 3000 });
+        this.dialogRef.close(true);
       },
-      error: () => this.snackBar.open('Error unassigning book', 'OK', { duration: 3000 }),
+      error: () => this.snackBar.open('Error saving changes', 'OK', { duration: 3000 }),
     });
   }
 
   close(): void {
-    this.dialogRef.close(this.changed);
+    this.dialogRef.close(false);
   }
 }

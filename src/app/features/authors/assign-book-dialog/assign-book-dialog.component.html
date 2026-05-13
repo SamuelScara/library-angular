@@ -1,13 +1,13 @@
-<h2 mat-dialog-title>Manage Author — {{ author.firstName }} {{ author.lastName }}</h2>
+<h2 mat-dialog-title>Manage Books — {{ author.firstName }} {{ author.lastName }}</h2>
 
   <mat-dialog-content>
 
     <p><strong>Assigned books</strong></p>
     <mat-list>
       <mat-list-item *ngFor="let b of currentBooks">
-        <mat-icon matListItemIcon>person</mat-icon>
-        <span matListItemTitle>{{ b.title }} </span>
-        <button matListItemMeta mat-icon-button color="warn" (click)="unassignBook(b)">
+        <mat-icon matListItemIcon>book</mat-icon>
+        <span matListItemTitle>{{ b.title }}</span>
+        <button matListItemMeta mat-icon-button color="warn" (click)="stageRemove(b)">
           <mat-icon>remove</mat-icon>
         </button>
       </mat-list-item>
@@ -19,7 +19,7 @@
     <p><strong>Available books</strong></p>
     <mat-form-field appearance="outline" style="width: 100%">
       <mat-label>Search</mat-label>
-      <input matInput [formControl]="searchControl" placeholder="Name..." />
+      <input matInput [formControl]="searchControl" placeholder="Title..." />
       <button *ngIf="searchControl.value" matSuffix mat-icon-button (click)="searchControl.reset()">
         <mat-icon>close</mat-icon>
       </button>
@@ -27,9 +27,9 @@
 
     <mat-list>
       <mat-list-item *ngFor="let b of filteredBooks">
-        <mat-icon matListItemIcon>person</mat-icon>
+        <mat-icon matListItemIcon>book</mat-icon>
         <span matListItemTitle>{{ b.title }}</span>
-        <button matListItemMeta mat-icon-button color="primary" (click)="assignBook(b)">
+        <button matListItemMeta mat-icon-button color="primary" (click)="stageAdd(b)">
           <mat-icon>add</mat-icon>
         </button>
       </mat-list-item>
@@ -43,5 +43,6 @@
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
-    <button mat-flat-button (click)="close()">Close</button>
+    <button mat-button (click)="close()">Cancel</button>
+    <button mat-flat-button color="primary" [disabled]="!hasPendingChanges" (click)="save()">Save</button>
   </mat-dialog-actions>

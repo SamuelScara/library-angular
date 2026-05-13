@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { forkJoin } from 'rxjs';
 import { Book } from '../../../core/models/book.model';
 import { Lib } from '../../../core/models/lib.model';
 import { BookService } from '../../../core/services/book.service';
@@ -26,24 +27,39 @@ export class AssignBooksDialogComponent implements OnInit {
 
   lib: Lib = inject(MAT_DIALOG_DATA);
   availableBooks: Book[] = [];
+  stagedBooks: Book[] = [];
+
+  get hasPendingChanges(): boolean {
+    return this.stagedBooks.length > 0;
+  }
 
   ngOnInit(): void {
-    const assignedIds = new Set(this.lib.books.map((b) => b.id)); // Set with all assigned books for the current library
+    const assignedIds = new Set(this.lib.books.map((b) => b.id));
     this.bookService.getAll().subscribe((books) => {
-      this.availableBooks = books.filter((b) => !assignedIds.has(b.id)); // take all books and filter for the books that aren't already assigned for the current library
+      this.availableBooks = books.filter((b) => !assignedIds.has(b.id));
       this.cdr.detectChanges();
     });
   }
 
-  assign(book: Book): void {
-    this.libService.assignBook(this.lib.id, book.id).subscribe({
+  stageBook(book: Book): void {
+    this.stagedBooks = [...this.stagedBooks, book];
+    this.availableBooks = this.availableBooks.filter((b) => b.id !== book.id);
+    this.cdr.detectChanges();
+  }
+
+  unstageBook(book: Book): void {
+    this.stagedBooks = this.stagedBooks.filter((b) => b.id !== book.id);
+    this.availableBooks = [...this.availableBooks, book];
+    this.cdr.detectChanges();
+  }
+
+  save(): void {
+    forkJoin(this.stagedBooks.map((b) => this.libService.assignBook(this.lib.id, b.id))).subscribe({
       next: () => {
-        this.availableBooks = this.availableBooks.filter((b) => b.id !== book.id); // remove the assigned book from the availableBooks array
-        this.cdr.detectChanges();
-        this.snackBar.open(`"${book.title}" assigned`, 'OK', { duration: 3000 });
+        this.snackBar.open('Books assigned', 'OK', { duration: 3000 });
+        this.dialogRef.close(true);
       },
-      error: () =>
-        this.snackBar.open('An error occured while assigning the book', 'OK', { duration: 3000 }),
+      error: () => this.snackBar.open('Error assigning books', 'OK', { duration: 3000 }),
     });
   }
 }

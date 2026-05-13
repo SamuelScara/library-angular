@@ -8,7 +8,7 @@
         <mat-icon matListItemIcon>person</mat-icon>
         <span matListItemTitle>{{ a.firstName }} {{ a.lastName }}</span>
         <span matListItemLine>{{ a.nationality }}</span>
-        <button matListItemMeta mat-icon-button color="warn" (click)="removeAuthor(a)">
+        <button matListItemMeta mat-icon-button color="warn" (click)="stageRemove(a)">
           <mat-icon>remove</mat-icon>
         </button>
       </mat-list-item>
@@ -31,7 +31,7 @@
         <mat-icon matListItemIcon>person</mat-icon>
         <span matListItemTitle>{{ a.firstName }} {{ a.lastName }}</span>
         <span matListItemLine>{{ a.nationality }}</span>
-        <button matListItemMeta mat-icon-button color="primary" (click)="assignAuthor(a)">
+        <button matListItemMeta mat-icon-button color="primary" (click)="stageAdd(a)">
           <mat-icon>add</mat-icon>
         </button>
       </mat-list-item>
@@ -45,5 +45,6 @@
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
-    <button mat-flat-button (click)="close()">Close</button>
+    <button mat-button (click)="close()">Cancel</button>
+    <button mat-flat-button color="primary" [disabled]="!hasPendingChanges" (click)="save()">Save</button>
   </mat-dialog-actions>

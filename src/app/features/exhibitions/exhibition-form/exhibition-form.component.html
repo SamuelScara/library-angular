@@ -1,56 +1,56 @@
 <h2 mat-dialog-title>{{ isEdit ? 'Edit Exhibition' : 'New Exhibition' }}</h2>
-  <mat-dialog-content>                                                                                                                                                                       
+  <mat-dialog-content>
     <form [formGroup]="form">
-                                                                                                                                                                                             
+
       <mat-form-field appearance="outline">
-        <mat-label>Title</mat-label>                                                                                                                                                         
+        <mat-label>Title</mat-label>
         <input matInput formControlName="title" />
       </mat-form-field>
 
-      <mat-form-field appearance="outline">                                                                                                                                                  
+      <mat-form-field appearance="outline">
         <mat-label>Library</mat-label>
-        <mat-select formControlName="libId">                                                                                                                                                 
+        <mat-select formControlName="libId">
           <mat-option *ngFor="let l of libs" [value]="l.id">{{ l.name }} — {{ l.city }}</mat-option>
-        </mat-select>                                                                                                                                                                        
+        </mat-select>
       </mat-form-field>
-                                                                                                                                                                                             
+
       <mat-form-field appearance="outline">
         <mat-label>Start date</mat-label>
-        <input matInput type="date" formControlName="startDate" />                                                                                                                           
+        <input matInput type="date" formControlName="startDate" />
       </mat-form-field>
-                                                                                                                                                                                             
+
       <mat-form-field appearance="outline">
         <mat-label>End date</mat-label>
-        <input matInput type="date" formControlName="endDate" />                                                                                                                             
+        <input matInput type="date" formControlName="endDate" />
       </mat-form-field>
-                                                                                                                                                                                             
+
       <mat-form-field appearance="outline">
         <mat-label>Planned simulation date</mat-label>
-        <input matInput type="date" formControlName="simulationDate" />                                                                                                                      
+        <input matInput type="date" formControlName="plannedSimulationDate" />
       </mat-form-field>
-                                                                                                                                                                                             
-    </form>       
 
-    <p><strong>Books</strong>                                                                                                                                                                
+    </form>
+
+    <p><strong>Books</strong>
       <span *ngIf="!form.get('libId')?.value" style="color: gray; font-weight: normal">
-        — select a library first                                                                                                                                                             
+        — select a library first
       </span>     
-    </p>                                                                                                                                                                                     
-                                                                                                                                                                                             
+    </p>
+
     <mat-selection-list>
-      <mat-list-option                                                                                                                                                                       
+      <mat-list-option
         *ngFor="let b of booksForLib"
         [selected]="isSelected(b.id)"
-        (click)="toggleBook(b.id)">                                                                                                                                                          
+        (click)="toggleBook(b.id)">
         {{ b.title }} — {{ b.isbn }}
-      </mat-list-option>                                                                                                                                                                     
+      </mat-list-option>
     </mat-selection-list>
 
-    <p *ngIf="form.get('libId')?.value && booksForLib.length === 0" style="color: gray">                                                                                                     
+    <p *ngIf="form.get('libId')?.value && booksForLib.length === 0" style="color: gray">
       No books in this library.
-    </p>                                                                                                                                                                                     
+    </p>
   </mat-dialog-content>
-                                                                                                                                                                                             
+
   <mat-dialog-actions align="end">
     <button mat-button (click)="dialogRef.close()">Cancel</button>
     <button mat-flat-button color="primary" [disabled]="!canSubmit" (click)="submit()">Save</button>

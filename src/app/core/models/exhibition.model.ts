@@ -5,8 +5,9 @@ export interface Exhibition {
   title: string;
   startDate: Date;
   endDate: Date;
-  simulationDate: Date;
+  plannedSimulationDate?: Date;
   libId: number;
   bookIds: number[];
   books: Book[];
+  lastSimulationDate?: Date;
 }

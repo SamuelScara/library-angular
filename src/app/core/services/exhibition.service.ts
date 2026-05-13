@@ -9,7 +9,7 @@ import { SimulationResponse } from '../models/simulation-response.model';
 })
 export class ExhibitionService {
   private http = inject(HttpClient);
-  private baseUrl = '/api/exhibition-simulations';
+  private baseUrl = '/api/exhibitions';
 
   getAll(): Observable<Exhibition[]> {
     return this.http.get<Exhibition[]>(this.baseUrl);

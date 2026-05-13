@@ -46,7 +46,7 @@ export class ExhibitionFormComponent implements OnInit {
     libId: [this.data?.libId ?? (null as number | null), Validators.required],
     startDate: [this.data?.startDate ?? '', Validators.required],
     endDate: [this.data?.endDate ?? '', Validators.required],
-    simulationDate: [this.data?.simulationDate ?? '', Validators.required],
+    plannedSimulationDate: [this.data?.plannedSimulationDate ?? '', Validators.required],
   });
 
   get isEdit(): boolean {

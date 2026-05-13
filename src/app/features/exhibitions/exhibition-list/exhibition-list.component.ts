@@ -42,7 +42,7 @@ export class ExhibitionListComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   exhibitions: Exhibition[] = [];
-  columns = ['title', 'libId', 'startDate', 'endDate', 'simulationDate', 'actions'];
+  columns = ['title', 'libId', 'startDate', 'endDate', 'lastSimulationDate', 'actions'];
   expandedExhibition: Exhibition | null = null;
 
   toggleExpand(exhibition: Exhibition): void {
@@ -95,7 +95,9 @@ export class ExhibitionListComponent implements OnInit {
   delete(id: number): void {
     this.dialog
       .open(ConfirmDialogComponent, {
-        data: { message: 'Are you sure you want to delete this exhibition? This action cannot be undone.' },
+        data: {
+          message: 'Are you sure you want to delete this exhibition? This action cannot be undone.',
+        },
         width: '380px',
       })
       .afterClosed()

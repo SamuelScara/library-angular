@@ -10,6 +10,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Book } from '../../../core/models/book.model';
 import { BookService } from '../../../core/services/book.service';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { AssignAuthorDialogComponent } from '../assign-author-dialog/assign-author-dialog.component';
 import { BookFormComponent } from '../book-form/book-form.component';
 
@@ -108,11 +109,20 @@ export class BookListComponent implements OnInit {
   }
 
   delete(id: number) {
-    this.bookService.delete(id).subscribe({
-      next: () => {
-        this.load();
-        this.snackBar.open('Book deleted', 'OK', { duration: 3000 });
-      },
-    });
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        data: { message: 'Are you sure you want to delete this book? This action cannot be undone.' },
+        width: '380px',
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
+        this.bookService.delete(id).subscribe({
+          next: () => {
+            this.load();
+            this.snackBar.open('Book deleted', 'OK', { duration: 3000 });
+          },
+        });
+      });
   }
 }

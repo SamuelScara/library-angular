@@ -9,6 +9,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Director } from '../../../core/models/director.model';
 import { DirectorService } from '../../../core/services/director.service';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { DirectorLibsDialogComponent } from '../director-libs-dialog/director-libs-dialog.component';
 import { DirectorsFormComponent } from '../directors-form/directors-form.component';
 
@@ -105,11 +106,20 @@ export class DirectorsListComponent implements OnInit {
   }
 
   delete(directorId: number) {
-    this.directorService.delete(directorId).subscribe({
-      next: () => {
-        this.load();
-        this.snackBar.open('Director deleted', 'OK', { duration: 3000 });
-      },
-    });
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        data: { message: 'Are you sure you want to delete this director? This action cannot be undone.' },
+        width: '380px',
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
+        this.directorService.delete(directorId).subscribe({
+          next: () => {
+            this.load();
+            this.snackBar.open('Director deleted', 'OK', { duration: 3000 });
+          },
+        });
+      });
   }
 }

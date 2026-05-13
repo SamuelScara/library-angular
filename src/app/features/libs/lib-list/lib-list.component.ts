@@ -16,6 +16,7 @@ import { BookService } from '../../../core/services/book.service';
 import { LibService } from '../../../core/services/lib.service';
 import { BookInfoDialogComponent } from '../../books/book-info-dialog/book-info-dialog.component';
 import { AssignBooksDialogComponent } from '../assign-books-dialog/assign-books-dialog.component';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { LibFormComponent } from '../lib-form/lib-form.component';
 import { LibsDirectorDialogComponent } from '../libs-director-dialog/libs-director-dialog.component';
 
@@ -125,12 +126,21 @@ export class LibListComponent implements OnInit {
   }
 
   delete(id: number) {
-    this.libService.delete(id).subscribe({
-      next: () => {
-        this.load();
-        this.snackBar.open('Library deleted', 'OK', { duration: 3000 });
-      },
-    });
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        data: { message: 'Are you sure you want to delete this library? This action cannot be undone.' },
+        width: '380px',
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
+        this.libService.delete(id).subscribe({
+          next: () => {
+            this.load();
+            this.snackBar.open('Library deleted', 'OK', { duration: 3000 });
+          },
+        });
+      });
   }
 
   unassignBookFromLib(lib: Lib, bookId: number): void {

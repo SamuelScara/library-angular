@@ -12,6 +12,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Exhibition } from '../../../core/models/exhibition.model';
 import { ExhibitionService } from '../../../core/services/exhibition.service';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { ExhibitionFormComponent } from '../exhibition-form/exhibition-form.component';
 import { SimulationResultDialogComponent } from '../simulation-result-dialog/simulation-result-dialog.component';
 
@@ -92,12 +93,21 @@ export class ExhibitionListComponent implements OnInit {
   }
 
   delete(id: number): void {
-    this.exhibitionService.delete(id).subscribe({
-      next: () => {
-        this.load();
-        this.snackBar.open('Exhibition deleted', 'OK', { duration: 3000 });
-      },
-    });
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        data: { message: 'Are you sure you want to delete this exhibition? This action cannot be undone.' },
+        width: '380px',
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
+        this.exhibitionService.delete(id).subscribe({
+          next: () => {
+            this.load();
+            this.snackBar.open('Exhibition deleted', 'OK', { duration: 3000 });
+          },
+        });
+      });
   }
 
   simulate(exhibition: Exhibition): void {

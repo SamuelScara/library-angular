@@ -10,6 +10,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Author } from '../../../core/models/author.model';
 import { AuthorService } from '../../../core/services/author.service';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { AssignBookDialogComponent } from '../assign-book-dialog/assign-book-dialog.component';
 import { AuthorBooksDialogComponent } from '../author-books-dialog/author-books-dialog.component';
 import { AuthorFormComponent } from '../author-form/author-form.component';
@@ -111,11 +112,20 @@ export class AuthorListComponent implements OnInit {
   }
 
   delete(id: number) {
-    this.authorService.delete(id).subscribe({
-      next: () => {
-        this.load();
-        this.snackBar.open('Author deleted', 'OK', { duration: 3000 });
-      },
-    });
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        data: { message: 'Are you sure you want to delete this author? This action cannot be undone.' },
+        width: '380px',
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
+        this.authorService.delete(id).subscribe({
+          next: () => {
+            this.load();
+            this.snackBar.open('Author deleted', 'OK', { duration: 3000 });
+          },
+        });
+      });
   }
 }

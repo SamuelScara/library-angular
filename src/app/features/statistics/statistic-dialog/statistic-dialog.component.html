@@ -1,0 +1,17 @@
+ <h2 mat-dialog-title>Stats — {{ book.title }}</h2>
+<mat-dialog-content style="min-width:280px">
+  <div *ngIf="loading" style="display:flex;justify-content:center;padding:24px">
+    <mat-spinner diameter="36" />
+  </div>
+  <table *ngIf="stats" style="width:100%;border-collapse:collapse">
+    <tr><td>Total runs</td>    <td align="right"><b>{{ stats.totalRuns }}</b></td></tr>
+    <tr><td>Avg visitors</td>  <td align="right"><b>{{ stats.avgVisitors  | number:'1.0-1' }}</b></td></tr>
+    <tr><td>Avg position</td>  <td align="right"><b>{{ stats.avgPosition  | number:'1.0-1' }}</b></td></tr>
+    <tr><td>Best position</td> <td align="right"><b>{{ stats.bestPosition }}</b></td></tr>
+    <tr><td>Times #1</td>      <td align="right"><b>{{ stats.firstPlaceCount }}</b></td></tr>
+  </table>
+  <p *ngIf="!loading && !stats" style="color:gray">No simulation data available.</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Close</button>
+</mat-dialog-actions>

@@ -6,6 +6,17 @@ export interface BookFilters {
   availability?: boolean | null;
   authorName?: string;
 }
+
+export interface BookStats {
+  bookId: number;
+  bookTitle: string;
+  totalRuns: number;
+  avgVisitors: number;
+  avgPosition: number;
+  bestPosition: number;
+  firstPlaceCount: number;
+}
+
 export interface Book {
   id: number;
   title: string;

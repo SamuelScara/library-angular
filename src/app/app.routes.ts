@@ -4,6 +4,7 @@ import { BookListComponent } from './features/books/book-list/book-list.componen
 import { DirectorsListComponent } from './features/directors/directors-list/directors-list.component';
 import { ExhibitionListComponent } from './features/exhibitions/exhibition-list/exhibition-list.component';
 import { LibListComponent } from './features/libs/lib-list/lib-list.component';
+import { StatisticListComponent } from './features/statistics/statistic-list/statistic-list.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'libs', pathMatch: 'full' },
@@ -12,4 +13,5 @@ export const routes: Routes = [
   { path: 'books', component: BookListComponent },
   { path: 'authors', component: AuthorListComponent },
   { path: 'exhibitions', component: ExhibitionListComponent },
+  { path: 'statistics', component: StatisticListComponent },
 ];

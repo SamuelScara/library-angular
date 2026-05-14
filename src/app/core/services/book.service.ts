@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Book, BookFilters } from '../models/book.model';
+import { Book, BookFilters, BookStats } from '../models/book.model';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +21,14 @@ export class BookService {
 
   getById(id: number): Observable<Book> {
     return this.http.get<Book>(`${this.baseUrl}/${id}`);
+  }
+
+  getBookStats(id: number): Observable<BookStats> {
+    return this.http.get<BookStats>(`${this.baseUrl}/${id}/stats`);
+  }
+
+  getAllBooksStats(): Observable<BookStats[]> {
+    return this.http.get<BookStats[]>(`${this.baseUrl}/stats`);
   }
 
   create(book: Partial<Book>): Observable<Book> {

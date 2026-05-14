@@ -17,6 +17,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { Book, BookFilters } from '../../../core/models/book.model';
 import { BookService } from '../../../core/services/book.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { StatisticDialogComponent } from '../../statistics/statistic-dialog/statistic-dialog.component';
 import { AssignAuthorDialogComponent } from '../assign-author-dialog/assign-author-dialog.component';
 import { BookFilterDialogComponent } from '../book-filter-dialog/book-filter-dialog.component';
 import { BookFormComponent } from '../book-form/book-form.component';
@@ -124,6 +125,10 @@ export class BookListComponent implements OnInit {
         this.activeFilters = result;
         this.load();
       });
+  }
+
+  openStatisticDialog(book: Book) {
+    this.dialog.open(StatisticDialogComponent, { data: book, width: '340px' });
   }
 
   openAssignAuthorDialog(book: Book) {

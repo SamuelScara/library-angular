@@ -1,3 +1,4 @@
+import { NgFor } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -5,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -26,6 +28,8 @@ import { AuthorFormComponent } from '../author-form/author-form.component';
     MatToolbarModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
+    NgFor,
   ],
   templateUrl: './author-list.component.html',
   styleUrl: './author-list.component.css',
@@ -40,6 +44,8 @@ export class AuthorListComponent implements OnInit {
   columns = ['firstName', 'lastName', 'nationality', 'actions'];
   authorSearch = new FormControl('');
   bookSearch = new FormControl('');
+  nationalityFilter = new FormControl('');
+  nationalities: string[] = [];
 
   get filteredAuthors(): Author[] {
     const author = (this.authorSearch.value ?? '').toLowerCase().trim();
@@ -57,11 +63,15 @@ export class AuthorListComponent implements OnInit {
 
   ngOnInit(): void {
     this.load();
+    this.nationalityFilter.valueChanges.subscribe((value) => this.load(value ?? ''));
   }
 
-  load() {
-    this.authorService.getAll().subscribe((data) => {
+  load(nationality = '') {
+    this.authorService.getAll(nationality).subscribe((data) => {
       this.authors = data;
+      if (!nationality) {
+        this.nationalities = [...new Set(data.map((a) => a.nationality).filter(Boolean))].sort();
+      }
       this.cdr.detectChanges();
     });
   }
@@ -114,7 +124,9 @@ export class AuthorListComponent implements OnInit {
   delete(id: number) {
     this.dialog
       .open(ConfirmDialogComponent, {
-        data: { message: 'Are you sure you want to delete this author? This action cannot be undone.' },
+        data: {
+          message: 'Are you sure you want to delete this author? This action cannot be undone.',
+        },
         width: '380px',
       })
       .afterClosed()

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Author } from '../models/author.model';
@@ -11,8 +11,10 @@ export class AuthorService {
   private http = inject(HttpClient);
   private baseUrl = '/api/authors';
 
-  getAll(): Observable<Author[]> {
-    return this.http.get<Author[]>(this.baseUrl);
+  getAll(nationality?: string): Observable<Author[]> {
+    let params = new HttpParams();
+    if (nationality?.trim()) params = params.set('nationality', nationality.trim());
+    return this.http.get<Author[]>(this.baseUrl, { params });
   }
 
   getById(id: number): Observable<Author> {

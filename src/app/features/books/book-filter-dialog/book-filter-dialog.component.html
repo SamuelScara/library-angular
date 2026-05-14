@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Filter books</h2>
+<mat-dialog-content [formGroup]="form" style="display:flex; flex-direction:column; gap:12px; padding-top:8px">
+  <div style="display:flex; gap:12px">
+    <mat-form-field appearance="outline" style="flex:1">
+      <mat-label>Year from</mat-label>
+      <input matInput type="number" formControlName="yearFrom" />
+    </mat-form-field>
+    <mat-form-field appearance="outline" style="flex:1">
+      <mat-label>Year to</mat-label>
+      <input matInput type="number" formControlName="yearTo" />
+    </mat-form-field>
+  </div>
+  <mat-form-field appearance="outline">
+    <mat-label>Availability</mat-label>
+    <mat-select formControlName="availability">
+      <mat-option [value]="null">All</mat-option>
+      <mat-option [value]="true">Available</mat-option>
+      <mat-option [value]="false">Not available</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Author</mat-label>
+    <input matInput formControlName="authorName" />
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="clear()">Clear</button>
+  <button mat-button mat-dialog-close (click)="cancel()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="apply()">Apply</button>
+</mat-dialog-actions>

@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Book } from '../models/book.model';
+import { Book, BookFilters } from '../models/book.model';
 
 @Injectable({
   providedIn: 'root',
@@ -10,8 +10,13 @@ export class BookService {
   private http = inject(HttpClient);
   private baseUrl = '/api/books';
 
-  getAll(): Observable<Book[]> {
-    return this.http.get<Book[]>(this.baseUrl);
+  getAll(filters: BookFilters = {}): Observable<Book[]> {
+    let params = new HttpParams();
+    if (filters.yearFrom != null) params = params.set('yearFrom', filters.yearFrom);
+    if (filters.yearTo != null) params = params.set('yearTo', filters.yearTo);
+    if (filters.availability != null) params = params.set('availability', filters.availability);
+    if (filters.authorName?.trim()) params = params.set('authorName', filters.authorName.trim());
+    return this.http.get<Book[]>(this.baseUrl, { params });
   }
 
   getById(id: number): Observable<Book> {

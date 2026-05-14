@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,15 +14,17 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Book } from '../../../core/models/book.model';
+import { Book, BookFilters } from '../../../core/models/book.model';
 import { BookService } from '../../../core/services/book.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { AssignAuthorDialogComponent } from '../assign-author-dialog/assign-author-dialog.component';
+import { BookFilterDialogComponent } from '../book-filter-dialog/book-filter-dialog.component';
 import { BookFormComponent } from '../book-form/book-form.component';
 
 @Component({
   selector: 'app-book-list-component',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     MatTableModule,
@@ -36,8 +44,16 @@ export class BookListComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   books: Book[] = [];
+  activeFilters: BookFilters = {};
   columns = ['title', 'isbn', 'pubYear', 'authors', 'availability', 'actions'];
   search = new FormControl('');
+
+  get activeFilterCount(): number {
+    const f = this.activeFilters;
+    return [f.yearFrom, f.yearTo, f.availability, f.authorName?.trim()].filter(
+      (v) => v != null && v !== '',
+    ).length;
+  }
 
   get filteredBooks(): Book[] {
     const q = (this.search.value ?? '').toLowerCase().trim();
@@ -61,9 +77,9 @@ export class BookListComponent implements OnInit {
   }
 
   load() {
-    this.bookService.getAll().subscribe((data) => {
+    this.bookService.getAll(this.activeFilters).subscribe((data) => {
       this.books = data;
-      this.cdr.detectChanges();
+      this.cdr.markForCheck();
     });
   }
 
@@ -99,6 +115,17 @@ export class BookListComponent implements OnInit {
       });
   }
 
+  openFilterDialog() {
+    this.dialog
+      .open(BookFilterDialogComponent, { data: this.activeFilters, width: '300px' })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result === undefined) return; // cancel
+        this.activeFilters = result;
+        this.load();
+      });
+  }
+
   openAssignAuthorDialog(book: Book) {
     this.dialog
       .open(AssignAuthorDialogComponent, { data: book })
@@ -111,7 +138,9 @@ export class BookListComponent implements OnInit {
   delete(id: number) {
     this.dialog
       .open(ConfirmDialogComponent, {
-        data: { message: 'Are you sure you want to delete this book? This action cannot be undone.' },
+        data: {
+          message: 'Are you sure you want to delete this book? This action cannot be undone.',
+        },
         width: '380px',
       })
       .afterClosed()

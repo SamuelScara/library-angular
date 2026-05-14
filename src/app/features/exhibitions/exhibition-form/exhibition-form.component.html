@@ -36,6 +36,14 @@
         — select a library first
       </span>     
     </p>
+    <div *ngIf="booksForLib.length > 0" style="margin-bottom:4px">
+      <mat-checkbox
+          [checked]="allSelected"
+          [indeterminate]="partiallySelected"
+          (change)="$event.checked ? selectAll() : deselectAll()">
+          Select all
+      </mat-checkbox>
+  </div>
 
     <mat-selection-list>
       <mat-list-option

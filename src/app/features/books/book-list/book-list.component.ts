@@ -5,12 +5,10 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -27,13 +25,11 @@ import { BookFormComponent } from '../book-form/book-form.component';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    ReactiveFormsModule,
     MatTableModule,
     MatButtonModule,
     MatIconModule,
     MatToolbarModule,
-    MatFormFieldModule,
-    MatInputModule,
+    MatPaginatorModule,
   ],
   templateUrl: './book-list.component.html',
   styleUrl: './book-list.component.css',
@@ -47,7 +43,10 @@ export class BookListComponent implements OnInit {
   books: Book[] = [];
   activeFilters: BookFilters = {};
   columns = ['title', 'isbn', 'pubYear', 'authors', 'availability', 'actions'];
-  search = new FormControl('');
+
+  currentPage = 0;
+  pageSize = 20;
+  totalElements = 0;
 
   get activeFilterCount(): number {
     const f = this.activeFilters;
@@ -56,32 +55,22 @@ export class BookListComponent implements OnInit {
     ).length;
   }
 
-  get filteredBooks(): Book[] {
-    const q = (this.search.value ?? '').toLowerCase().trim();
-    if (!q) return this.books;
-    return this.books.filter((b) => {
-      const authors = (b.authors ?? []).map((a) => `${a.firstName} ${a.lastName}`).join(' ');
-      return (
-        b.title.toLowerCase().includes(q) ||
-        b.isbn.toLowerCase().includes(q) ||
-        String(b.pubYear).includes(q) ||
-        String(b.availability ?? '')
-          .toLowerCase()
-          .includes(q) ||
-        authors.toLowerCase().includes(q)
-      );
-    });
-  }
-
   ngOnInit(): void {
     this.load();
   }
 
   load() {
-    this.bookService.getAll(this.activeFilters).subscribe((data) => {
-      this.books = data;
+    this.bookService.getAll(this.activeFilters, this.currentPage, this.pageSize).subscribe((data) => {
+      this.books = data.content;
+      this.totalElements = data.totalElements;
       this.cdr.markForCheck();
     });
+  }
+
+  onPageChange(event: PageEvent) {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.load();
   }
 
   openForm() {
@@ -121,8 +110,9 @@ export class BookListComponent implements OnInit {
       .open(BookFilterDialogComponent, { data: this.activeFilters, width: '300px' })
       .afterClosed()
       .subscribe((result) => {
-        if (result === undefined) return; // cancel
+        if (result === undefined) return;
         this.activeFilters = result;
+        this.currentPage = 0;
         this.load();
       });
   }

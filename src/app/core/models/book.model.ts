@@ -1,5 +1,13 @@
 import { Author } from './author.model';
 
+export interface PageResponse<T> {
+  content: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
 export interface BookFilters {
   yearFrom?: number | null;
   yearTo?: number | null;

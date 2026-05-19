@@ -35,7 +35,7 @@ export class AssignBooksDialogComponent implements OnInit {
 
   ngOnInit(): void {
     const assignedIds = new Set(this.lib.books.map((b) => b.id));
-    this.bookService.getAll().subscribe((books) => {
+    this.bookService.getAllList().subscribe((books) => {
       this.availableBooks = books.filter((b) => !assignedIds.has(b.id));
       this.cdr.detectChanges();
     });

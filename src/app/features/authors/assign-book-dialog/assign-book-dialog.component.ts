@@ -59,7 +59,7 @@ export class AssignBookDialogComponent implements OnInit {
     this.authorService.getBooks(this.author.id).subscribe((currentBooks) => {
       this.currentBooks = currentBooks;
       const assignedIds = new Set(currentBooks.map((b) => b.id));
-      this.bookService.getAll().subscribe((all) => {
+      this.bookService.getAllList().subscribe((all) => {
         this.availableBooks = all.filter((b) => !assignedIds.has(b.id));
         this.cdr.detectChanges();
       });

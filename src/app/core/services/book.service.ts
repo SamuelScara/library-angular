@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Book, BookFilters, BookStats } from '../models/book.model';
+import { map } from 'rxjs/operators';
+import { Book, BookFilters, BookStats, PageResponse } from '../models/book.model';
 
 @Injectable({
   providedIn: 'root',
@@ -10,13 +11,27 @@ export class BookService {
   private http = inject(HttpClient);
   private baseUrl = '/api/books';
 
-  getAll(filters: BookFilters = {}): Observable<Book[]> {
-    let params = new HttpParams();
+  getAll(
+    filters: BookFilters = {},
+    page = 0,
+    size = 20,
+    sort = 'title',
+    direction = 'asc',
+  ): Observable<PageResponse<Book>> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('size', size)
+      .set('sort', sort)
+      .set('direction', direction);
     if (filters.yearFrom != null) params = params.set('yearFrom', filters.yearFrom);
     if (filters.yearTo != null) params = params.set('yearTo', filters.yearTo);
     if (filters.availability != null) params = params.set('availability', filters.availability);
     if (filters.authorName?.trim()) params = params.set('authorName', filters.authorName.trim());
-    return this.http.get<Book[]>(this.baseUrl, { params });
+    return this.http.get<PageResponse<Book>>(this.baseUrl, { params });
+  }
+
+  getAllList(filters: BookFilters = {}): Observable<Book[]> {
+    return this.getAll(filters, 0, 10000).pipe(map((r) => r.content));
   }
 
   getById(id: number): Observable<Book> {

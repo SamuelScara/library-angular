@@ -1,4 +1,3 @@
-import { NgFor, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,8 +19,6 @@ import { Book } from '../../../core/models/book.model';
     MatButtonModule,
     MatListModule,
     MatIconModule,
-    NgFor,
-    NgIf,
   ],
   templateUrl: './book-form.component.html',
   styleUrl: './book-form.component.css',

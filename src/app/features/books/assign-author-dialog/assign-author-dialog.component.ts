@@ -63,7 +63,7 @@ export class AssignAuthorDialogComponent implements OnInit {
     this.bookService.getById(this.book.id).subscribe((freshBook) => {
       this.currentAuthors = freshBook.authors ?? [];
       const assignedIds = new Set(this.currentAuthors.map((a) => a.id));
-      this.authorService.getAll().subscribe((all) => {
+      this.authorService.getAllList().subscribe((all) => {
         this.availableAuthors = all.filter((a) => !assignedIds.has(a.id));
         this.cdr.detectChanges();
       });

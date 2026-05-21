@@ -1,16 +1,24 @@
 import { NgFor } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Author } from '../../../core/models/author.model';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Author, AuthorFilters } from '../../../core/models/author.model';
 import { AuthorService } from '../../../core/services/author.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { AssignBookDialogComponent } from '../assign-book-dialog/assign-book-dialog.component';
@@ -20,7 +28,9 @@ import { AuthorFormComponent } from '../author-form/author-form.component';
 @Component({
   selector: 'app-author-list-component',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    NgFor,
     ReactiveFormsModule,
     MatTableModule,
     MatButtonModule,
@@ -29,7 +39,7 @@ import { AuthorFormComponent } from '../author-form/author-form.component';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    NgFor,
+    MatPaginatorModule,
   ],
   templateUrl: './author-list.component.html',
   styleUrl: './author-list.component.css',
@@ -41,39 +51,47 @@ export class AuthorListComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   authors: Author[] = [];
+  nationalities: string[] = [];
   columns = ['firstName', 'lastName', 'nationality', 'actions'];
   authorSearch = new FormControl('');
-  bookSearch = new FormControl('');
   nationalityFilter = new FormControl('');
-  nationalities: string[] = [];
 
-  get filteredAuthors(): Author[] {
-    const author = (this.authorSearch.value ?? '').toLowerCase().trim();
-    const book = (this.bookSearch.value ?? '').toLowerCase().trim();
-    return this.authors.filter((a) => {
-      const matchAuthor =
-        !author ||
-        a.firstName.toLowerCase().includes(author) ||
-        a.lastName.toLowerCase().includes(author) ||
-        (a.nationality ?? '').toLowerCase().includes(author);
-      const matchBook = !book || (a.books ?? []).some((b) => b.title.toLowerCase().includes(book));
-      return matchAuthor && matchBook;
-    });
-  }
+  currentPage = 0;
+  pageSize = 20;
+  totalElements = 0;
 
   ngOnInit(): void {
-    this.load();
-    this.nationalityFilter.valueChanges.subscribe((value) => this.load(value ?? ''));
-  }
-
-  load(nationality = '') {
-    this.authorService.getAll(nationality).subscribe((data) => {
-      this.authors = data;
-      if (!nationality) {
-        this.nationalities = [...new Set(data.map((a) => a.nationality).filter(Boolean))].sort();
-      }
+    this.authorService.getNationalities().subscribe((n) => {
+      this.nationalities = n;
       this.cdr.detectChanges();
     });
+    this.load();
+    this.authorSearch.valueChanges.pipe(debounceTime(300), distinctUntilChanged()).subscribe(() => {
+      this.currentPage = 0;
+      this.load();
+    });
+    this.nationalityFilter.valueChanges.pipe(debounceTime(300), distinctUntilChanged()).subscribe(() => {
+      this.currentPage = 0;
+      this.load();
+    });
+  }
+
+  load() {
+    const filters: AuthorFilters = {
+      name: this.authorSearch.value ?? '',
+      nationality: this.nationalityFilter.value ?? '',
+    };
+    this.authorService.getAll(filters, this.currentPage, this.pageSize).subscribe((data) => {
+      this.authors = data.content;
+      this.totalElements = data.totalElements;
+      this.cdr.detectChanges();
+    });
+  }
+
+  onPageChange(event: PageEvent) {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.load();
   }
 
   openForm() {

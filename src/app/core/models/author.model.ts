@@ -4,6 +4,12 @@ export interface BookSummary {
   isbn: string;
   pubYear: number;
 }
+
+export interface AuthorFilters {
+  name?: string;
+  nationality?: string;
+}
+
 export interface Author {
   id: number;
   firstName: string;

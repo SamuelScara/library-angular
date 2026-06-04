@@ -1,4 +1,4 @@
-export type Role = 'ROLE_ADMIN' | 'ROLE_USER';
+export type Role = 'ROLE_ADMIN' | 'ROLE_USER' | 'ROLE_DIRECTOR' | 'ROLE_AUTHOR';
 
 export interface AppUser {
   id: number;

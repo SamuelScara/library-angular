@@ -1,0 +1,91 @@
+<mat-toolbar>
+  <a mat-icon-button routerLink="/catalog">
+    <mat-icon>arrow_back</mat-icon>
+  </a>
+  <span *ngIf="book">{{ book.title }}</span>
+</mat-toolbar>
+
+<div *ngIf="book" style="padding: 24px; max-width: 720px; margin: 0 auto">
+
+  <!-- Book info -->
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ book.title }}</mat-card-title>
+      <mat-card-subtitle>ISBN: {{ book.isbn }} · Year: {{ book.pubYear }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content style="margin-top: 8px">
+      <p>
+        <strong>Authors:</strong>
+        {{ book.authors.map(a => a.firstName + ' ' + a.lastName).join(', ') || '—' }}
+      </p>
+      <p>
+        <strong>Availability:</strong>
+        <span [style.color]="book.availability ? 'green' : 'crimson'">
+          {{ book.availability ? 'Available' : 'Not available' }}
+        </span>
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Reservation form — shown only when available -->
+  <mat-card *ngIf="book.availability" style="margin-top: 16px">
+    <mat-card-header>
+      <mat-card-title>Reserve</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="reservationForm" (ngSubmit)="reserve()" style="margin-top: 8px">
+        <mat-form-field appearance="outline">
+          <mat-label>From</mat-label>
+          <input matInput type="date" formControlName="dateFrom" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" style="margin-left: 8px">
+          <mat-label>To</mat-label>
+          <input matInput type="date" formControlName="dateTo" />
+        </mat-form-field>
+        <br />
+        <button mat-flat-button color="primary" type="submit" [disabled]="reservationForm.invalid">
+          Submit reservation
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Existing reviews -->
+  <mat-card style="margin-top: 16px">
+    <mat-card-header>
+      <mat-card-title>Reviews ({{ reviews.length }})</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p *ngIf="reviews.length === 0" style="color: grey">No reviews yet.</p>
+      <ng-container *ngFor="let r of reviews">
+        <p style="margin: 8px 0"><strong>{{ r.username }}</strong> — {{ r.rating }}/5</p>
+        <p style="margin: 4px 0 8px">{{ r.text }}</p>
+        <mat-divider></mat-divider>
+      </ng-container>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Leave a review -->
+  <mat-card style="margin-top: 16px">
+    <mat-card-header>
+      <mat-card-title>Leave a review</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="reviewForm" (ngSubmit)="submitReview()" style="margin-top: 8px">
+        <mat-form-field appearance="outline" style="width: 100px">
+          <mat-label>Rating</mat-label>
+          <mat-select formControlName="rating">
+            <mat-option *ngFor="let n of [1,2,3,4,5]" [value]="n">{{ n }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" style="width: 100%; margin-top: 8px">
+          <mat-label>Comment (optional)</mat-label>
+          <textarea matInput formControlName="text" rows="3"></textarea>
+        </mat-form-field>
+        <button mat-flat-button color="primary" type="submit" [disabled]="reviewForm.invalid">
+          Publish
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

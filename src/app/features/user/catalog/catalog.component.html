@@ -1,0 +1,31 @@
+<mat-toolbar>
+  <span>Catalog</span>
+  <span style="flex: 1"></span>
+  <mat-form-field appearance="outline" style="width: 320px; margin-top: 16px">
+    <mat-label>Search by title or author</mat-label>
+    <input matInput [formControl]="search" />
+  </mat-form-field>
+</mat-toolbar>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; padding: 24px">
+  <mat-card *ngFor="let book of books" style="width: 260px">
+    <mat-card-header>
+      <mat-card-title>{{ book.title }}</mat-card-title>
+      <mat-card-subtitle>
+        {{ book.authors.map(a => a.firstName + ' ' + a.lastName).join(', ') || '—' }}
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content style="margin-top: 8px">
+      <mat-chip-set>
+        <mat-chip [color]="book.availability ? 'primary' : 'warn'" highlighted>
+          {{ book.availability ? 'Available' : 'Not available' }}
+        </mat-chip>
+      </mat-chip-set>
+    </mat-card-content>
+    <mat-card-actions>
+      <a mat-button [routerLink]="['/books', book.id]">Details</a>
+    </mat-card-actions>
+  </mat-card>
+
+  <p *ngIf="books.length === 0" style="color: grey; padding: 8px">No books found.</p>
+</div>

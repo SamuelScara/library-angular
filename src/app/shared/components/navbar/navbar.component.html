@@ -1,10 +1,33 @@
 <mat-toolbar color="primary">
   <span>Library</span>
   <span style="flex: 1"></span>
-  <a mat-button routerLink="/libs" routerLinkActive="active-link">Libraries</a>
-  <a mat-button routerLink="/directors" routerLinkActive="active-link">Directors</a>
-  <a mat-button routerLink="/books" routerLinkActive="active-link">Books</a>
-  <a mat-button routerLink="/authors" routerLinkActive="active-link">Authors</a>
-  <a mat-button routerLink="/exhibitions" routerLinkActive="active-link">Exhibitions</a>
-  <a mat-button routerLink="/statistics" routerLinkActive="active-link">Statistics</a>
+
+  <ng-container *ngIf="auth.currentUser$ | async as user; else guestLinks">
+
+    <!-- Admin -->
+    <ng-container *ngIf="user.role === 'ROLE_ADMIN'">
+      <a mat-button routerLink="/admin/authors"      routerLinkActive="active-link">Authors</a>
+      <a mat-button routerLink="/admin/books"        routerLinkActive="active-link">Books</a>
+      <a mat-button routerLink="/admin/libs"         routerLinkActive="active-link">Libraries</a>
+      <a mat-button routerLink="/admin/directors"    routerLinkActive="active-link">Directors</a>
+      <a mat-button routerLink="/admin/exhibitions"  routerLinkActive="active-link">Exhibitions</a>
+      <a mat-button routerLink="/admin/statistics"   routerLinkActive="active-link">Statistics</a>
+      <a mat-button routerLink="/admin/users"        routerLinkActive="active-link">Users</a>
+      <a mat-button routerLink="/admin/reservations" routerLinkActive="active-link">Reservations</a>
+    </ng-container>
+
+    <!-- User / Author / Director -->
+    <ng-container *ngIf="user.role !== 'ROLE_ADMIN'">
+      <a mat-button routerLink="/catalog"          routerLinkActive="active-link">Catalog</a>
+      <a mat-button routerLink="/my-reservations"  routerLinkActive="active-link">My reservations</a>
+    </ng-container>
+
+    <button mat-button (click)="confirmLogout()">Logout</button>
+
+  </ng-container>
+
+  <ng-template #guestLinks>
+    <a mat-button routerLink="/login"    routerLinkActive="active-link">Log in</a>
+    <a mat-button routerLink="/register" routerLinkActive="active-link">Sign up</a>
+  </ng-template>
 </mat-toolbar>

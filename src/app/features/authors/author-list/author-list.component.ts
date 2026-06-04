@@ -50,14 +50,14 @@ export class AuthorListComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
 
-  authors: Author[] = [];
+  authors: Author[] = []; // current author page content
   nationalities: string[] = [];
   columns = ['firstName', 'lastName', 'nationality', 'actions'];
   authorSearch = new FormControl('');
   nationalityFilter = new FormControl('');
 
-  currentPage = 0;
-  pageSize = 20;
+  currentPage = 0; // current page index
+  pageSize = 20; // selected page size for the elements to display
   totalElements = 0;
 
   ngOnInit(): void {
@@ -70,10 +70,12 @@ export class AuthorListComponent implements OnInit {
       this.currentPage = 0;
       this.load();
     });
-    this.nationalityFilter.valueChanges.pipe(debounceTime(300), distinctUntilChanged()).subscribe(() => {
-      this.currentPage = 0;
-      this.load();
-    });
+    this.nationalityFilter.valueChanges
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe(() => {
+        this.currentPage = 0;
+        this.load();
+      });
   }
 
   load() {

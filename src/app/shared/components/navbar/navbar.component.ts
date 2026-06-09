@@ -2,6 +2,8 @@ import { AsyncPipe, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -10,7 +12,16 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 @Component({
   selector: 'app-navbar-component',
   standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, RouterLink, RouterLinkActive, NgIf, AsyncPipe],
+  imports: [
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    RouterLink,
+    RouterLinkActive,
+    NgIf,
+    AsyncPipe,
+  ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
@@ -20,8 +31,14 @@ export class NavbarComponent {
 
   confirmLogout(): void {
     const ref = this.dialog.open(ConfirmDialogComponent, {
-      data: { title: 'Logout', message: 'Are you sure you want to log out?', confirmLabel: 'Logout' }
+      data: {
+        title: 'Logout',
+        message: 'Are you sure you want to log out?',
+        confirmLabel: 'Logout',
+      },
     });
-    ref.afterClosed().subscribe(confirmed => { if (confirmed) this.auth.logout(); });
+    ref.afterClosed().subscribe((confirmed) => {
+      if (confirmed) this.auth.logout();
+    });
   }
 }

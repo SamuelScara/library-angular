@@ -9,8 +9,8 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { catchError, of } from 'rxjs';
 import { routes } from './app.routes';
-import { credentialInterceptor } from './core/interceptors/credentials.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
+import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { loadingInterceptor } from './core/interceptors/loading.interceptor';
 import { retryInterceptor } from './core/interceptors/retry.interceptor';
 import { AuthService } from './core/services/auth.service';
@@ -24,12 +24,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([
-        loadingInterceptor,
-        retryInterceptor,
-        errorInterceptor,
-        credentialInterceptor,
-      ]),
+      withInterceptors([loadingInterceptor, retryInterceptor, errorInterceptor, jwtInterceptor]),
     ),
     provideAnimations(),
     {

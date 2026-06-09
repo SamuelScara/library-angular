@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink } from '@angular/router';
 import { debounceTime } from 'rxjs';
@@ -26,6 +27,7 @@ import { BookService } from '../../../core/services/book.service';
     MatFormFieldModule,
     MatInputModule,
     MatChipsModule,
+    MatPaginatorModule,
   ],
   templateUrl: './catalog.component.html',
   styleUrl: './catalog.component.css',
@@ -33,17 +35,33 @@ import { BookService } from '../../../core/services/book.service';
 export class CatalogComponent implements OnInit {
   private bookService = inject(BookService);
 
+  totalElements = 0;
+  pageSize = 20;
+  pageIndex = 0;
+
   books: Book[] = [];
   search = new FormControl('');
 
   ngOnInit() {
     this.load();
-    this.search.valueChanges.pipe(debounceTime(300)).subscribe(() => this.load());
+    this.search.valueChanges.pipe(debounceTime(300)).subscribe(() => {
+      this.pageIndex = 0;
+      this.load();
+    });
   }
 
   load() {
     this.bookService
-      .getAll({ authorName: this.search.value ?? '' })
-      .subscribe(page => (this.books = page.content));
+      .getAll({ authorName: this.search.value ?? '' }, this.pageIndex, this.pageSize)
+      .subscribe((page) => {
+        this.books = page.content;
+        this.totalElements = page.totalElements;
+      });
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.load();
   }
 }

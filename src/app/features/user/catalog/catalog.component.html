@@ -29,3 +29,11 @@
 
   <p *ngIf="books.length === 0" style="color: grey; padding: 8px">No books found.</p>
 </div>
+
+<mat-paginator
+    [length]="totalElements"
+    [pageSize]="pageSize"
+    [pageIndex]="pageIndex"
+    [pageSizeOptions]="[10, 20, 50]"
+    (page)="onPageChange($event)">
+</mat-paginator>

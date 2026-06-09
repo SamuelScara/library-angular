@@ -4,6 +4,7 @@ export interface AppUser {
   id: number;
   username: string;
   role: Role;
+  email?: string;
 }
 
 export interface AuthResponse {
@@ -11,6 +12,7 @@ export interface AuthResponse {
   username: string;
   role: Role;
   token: string;
+  email: string;
 }
 
 export interface RegisterRequest {

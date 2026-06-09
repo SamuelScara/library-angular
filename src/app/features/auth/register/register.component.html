@@ -1,39 +1,57 @@
-<div class="login-container">
-  <mat-card style="width: 360px">
-    <br/>
-    <mat-card-title>Sign up</mat-card-title>
-    <br/>
-    <mat-card-content>
-      <form [formGroup]="form" (ngSubmit)="submit()">
-        <mat-form-field appearance="outline" style="width: 100%">
-          <mat-label>Username</mat-label>
-          <input matInput formControlName="username" />
-          <mat-error *ngIf="form.get('username')?.hasError('required')">Camp required</mat-error>
-          <mat-error *ngIf="form.get('username')?.hasError('minlength')">Min 3 characters</mat-error>
-          <mat-error *ngIf="form.get('username')?.hasError('taken')">Username already taken</mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="outline" style="width: 100%">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" />
-          <mat-error *ngIf="form.get('email')?.hasError('required')">Camp required</mat-error>
-          <mat-error *ngIf="form.get('email')?.hasError('email')">Email not valid</mat-error>
-          <mat-error *ngIf="form.get('email')?.hasError('taken')">Email already taken</mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="outline" style="width: 100%">
-          <mat-label>Password</mat-label>
-          <input matInput type="password" formControlName="password" />
-          <mat-error *ngIf="form.get('password')?.hasError('required')">Camp required</mat-error>
-          <mat-error *ngIf="form.get('password')?.hasError('minlength')">Min 6 characters</mat-error>
-        </mat-form-field>
-        <p *ngIf="errorMessage" style="color: red">{{ errorMessage }}</p>
-        <button mat-flat-button color="primary" type="submit" style="width: 100%"
-                [disabled]="form.invalid">
-          Sign up
-        </button>
-      </form>
-    </mat-card-content>
-    <mat-card-actions>
-      <a routerLink="/login">Already registered, sign in</a>
-    </mat-card-actions>
-  </mat-card>
-</div>
+<mat-toolbar>
+  <a mat-icon-button routerLink="/catalog">
+    <mat-icon>arrow_back</mat-icon>
+  </a>
+</mat-toolbar>
+
+<div class="auth-container">
+    <mat-card class="auth-card">
+      <div class="auth-header">
+        <mat-icon class="auth-icon">person_add</mat-icon>
+        <h2>Create an account</h2>
+        <p>Join the library</p>
+      </div>
+      
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="submit()">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Username</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <input matInput formControlName="username" />
+            <mat-error *ngIf="form.get('username')?.hasError('required')">Required</mat-error>
+            <mat-error *ngIf="form.get('username')?.hasError('minlength')">Min 3 characters</mat-error>
+            <mat-error *ngIf="form.get('username')?.hasError('taken')">Username already taken</mat-error>
+          </mat-form-field>
+   
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <mat-icon matPrefix>email</mat-icon>
+            <input matInput type="email" formControlName="email" />
+            <mat-error *ngIf="form.get('email')?.hasError('required')">Required</mat-error>
+            <mat-error *ngIf="form.get('email')?.hasError('email')">Invalid email</mat-error>
+            <mat-error *ngIf="form.get('email')?.hasError('taken')">Email already taken</mat-error>
+          </mat-form-field>
+   
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Password</mat-label>
+            <mat-icon matPrefix>key</mat-icon>
+            <input matInput type="password" formControlName="password" />
+            <mat-error *ngIf="form.get('password')?.hasError('required')">Required</mat-error>
+            <mat-error *ngIf="form.get('password')?.hasError('minlength')">Min 6 characters</mat-error>
+          </mat-form-field>
+
+          <p *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</p>
+   
+          <button mat-flat-button color="primary" type="submit" class="full-width submit-btn"
+                  [disabled]="form.invalid">
+            Sign up
+          </button>
+        </form>
+      </mat-card-content>
+      
+      <div class="auth-footer">
+        Already registered? <a routerLink="/login">Log in</a>
+      </div>
+
+    </mat-card>
+  </div>

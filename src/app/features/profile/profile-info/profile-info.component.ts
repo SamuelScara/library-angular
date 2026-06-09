@@ -2,7 +2,9 @@ import { NgIf } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ProfileUpdateRequest } from '../../../core/models/user.model';
 import { AuthService } from '../../../core/services/auth.service';
@@ -10,7 +12,15 @@ import { AuthService } from '../../../core/services/auth.service';
 @Component({
   selector: 'app-profile-info.component',
   standalone: true,
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatCardModule, NgIf],
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCardModule,
+    MatIconModule,
+    MatDividerModule,
+    NgIf,
+  ],
   templateUrl: './profile-info.component.html',
   styleUrl: './profile-info.component.css',
 })
@@ -31,7 +41,7 @@ export class ProfileInfoComponent implements OnInit {
     const user = this.auth.currentUser$.value;
 
     if (user) {
-      this.form.patchValue({ username: user.username });
+      this.form.patchValue({ username: user.username, email: user.email });
     }
   }
 

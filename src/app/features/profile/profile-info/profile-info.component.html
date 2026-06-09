@@ -1,43 +1,58 @@
-<div class="login-container">
-  <mat-card style="width: 400px">
-    <br />
-    <mat-card-title>My Profile</mat-card-title>
-    <br />
-    <mat-card-content>
-      <form [formGroup]="form" (ngSubmit)="submit()">
+<div class="auth-container">
+    <mat-card class="auth-card">
+
+      <div class="auth-header">
+        <mat-icon class="auth-icon">account_circle</mat-icon>
+        <h2>My Profile</h2>
+      </div>
       
-        <mat-form-field appearance="outline" style="width: 100%">
-          <mat-label>Username</mat-label>
-          <input matInput formControlName="username" />
-          <mat-error *ngIf="form.get('username')?.hasError('required')">Required</mat-error>
-          <mat-error *ngIf="form.get('username')?.hasError('minlength')">Min 3 characters</mat-error>
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline" style="width: 100%">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" />
-          <mat-error *ngIf="form.get('email')?.hasError('email')">Invalid email</mat-error>
-        </mat-form-field>
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="submit()">
         
-        <mat-form-field appearance="outline" style="width: 100%">
-          <mat-label>Current password</mat-label>
-          <input matInput type="password" formControlName="currentPassword" />
-        </mat-form-field>
-        
-        <mat-form-field appearance="outline" style="width: 100%">
-          <mat-label>New password</mat-label>
-          <input matInput type="password" formControlName="newPassword" />
-          <mat-error *ngIf="form.get('newPassword')?.hasError('minlength')">Min 6 characters</mat-error>
-        </mat-form-field>
+          <p class="section-label">Account info</p>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Username</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <input matInput formControlName="username" />
+            <mat-error *ngIf="form.get('username')?.hasError('required')">Required</mat-error>
+            <mat-error *ngIf="form.get('username')?.hasError('minlength')">Min 3 characters</mat-error>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <mat-icon matPrefix>email</mat-icon>
+            <input matInput type="email" formControlName="email" />
+            <mat-error *ngIf="form.get('email')?.hasError('email')">Invalid email</mat-error>
+          </mat-form-field>
+      
+          <mat-divider style="margin: 8px 0 20px"></mat-divider>
+          
+          <p class="section-label">Change password</p>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Current password</mat-label>
+            <mat-icon matPrefix>lock</mat-icon>
+            <input matInput type="password" formControlName="currentPassword" />
+          </mat-form-field>
 
-        <p *ngIf="successMessage" style="color: green">{{ successMessage }}</p>
-        <p *ngIf="errorMessage"   style="color: red">{{ errorMessage }}</p>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>New password</mat-label>
+            <mat-icon matPrefix>lock_open</mat-icon>
+            <input matInput type="password" formControlName="newPassword" />
+            <mat-error *ngIf="form.get('newPassword')?.hasError('minlength')">Min 6 characters</mat-error>
+          </mat-form-field>
+          
+          <p *ngIf="successMessage" class="success-msg">{{ successMessage }}</p>
+          <p *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</p>
 
-        <button mat-flat-button color="primary" type="submit" style="width: 100%"
-                [disabled]="form.invalid">
-          Save
-        </button>
-      </form>
-    </mat-card-content>
-  </mat-card>
-</div>
+          <button mat-flat-button color="primary" type="submit" class="full-width submit-btn"
+                  [disabled]="form.invalid">
+            Save changes
+          </button>
+
+        </form>
+      </mat-card-content>
+
+    </mat-card>
+  </div>

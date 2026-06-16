@@ -46,6 +46,8 @@ export class AuthService {
           username: response.username,
           role: response.role,
           email: response.email,
+          linkedAuthorId: response.linkedAuthorId,
+          linkedDirectorId: response.linkedDirectorId,
         });
       }),
     );

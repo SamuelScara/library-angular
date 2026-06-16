@@ -52,7 +52,31 @@ export const routes: Routes = [
       },
       {
         path: 'profile',
-        loadComponent: () => import('./features/profile/profile-info/profile-info.component').then(m => m.ProfileInfoComponent),
+        loadComponent: () =>
+          import('./features/profile/profile-info/profile-info.component').then(
+            (m) => m.ProfileInfoComponent,
+          ),
+      },
+      {
+        path: 'my-author-profile',
+        loadComponent: () =>
+          import('./features/profile/profile-author/profile-author.component').then(
+            (m) => m.ProfileAuthorComponent,
+          ),
+      },
+      {
+        path: 'my-director-profile',
+        loadComponent: () =>
+          import('./features/profile/profile-director/profile-director.component').then(
+            (m) => m.ProfileDirectorComponent,
+          ),
+      },
+      {
+        path: 'my-library',
+        loadComponent: () =>
+          import('./features/libs/my-library/my-library.component').then(
+            (m) => m.MyLibraryComponent,
+          ),
       },
     ],
   },

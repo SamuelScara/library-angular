@@ -1,5 +1,5 @@
 import { NgFor, NgIf } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -29,16 +29,17 @@ import { BookService } from '../../../core/services/book.service';
   ],
   templateUrl: './assign-book-dialog.component.html',
   styleUrl: './assign-book-dialog.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AssignBookDialogComponent implements OnInit {
   private authorService = inject(AuthorService);
   private bookService = inject(BookService);
   private snackBar = inject(MatSnackBar);
-  private cdr = inject(ChangeDetectorRef);
   private dialogRef = inject(MatDialogRef);
+  private cdr = inject(ChangeDetectorRef);
 
   author: Author = inject(MAT_DIALOG_DATA);
-  currentBooks: BookSummary[] = [...(this.author?.books ?? [])];
+  currentBooks: BookSummary[] = [];
   availableBooks: BookSummary[] = [];
   searchControl = new FormControl('');
 
@@ -56,13 +57,14 @@ export class AssignBookDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authorService.getBooks(this.author.id).subscribe((currentBooks) => {
-      this.currentBooks = currentBooks;
-      const assignedIds = new Set(currentBooks.map((b) => b.id));
-      this.bookService.getAllList().subscribe((all) => {
-        this.availableBooks = all.filter((b) => !assignedIds.has(b.id));
-        this.cdr.detectChanges();
-      });
+    forkJoin({
+      current: this.authorService.getBooks(this.author.id),
+      all: this.bookService.getAllList(),
+    }).subscribe(({ current, all }) => {
+      const assignedIds = new Set(current.map((b) => b.id));
+      this.currentBooks = current;
+      this.availableBooks = all.filter((b) => !assignedIds.has(b.id));
+      this.cdr.markForCheck();
     });
   }
 
@@ -73,7 +75,6 @@ export class AssignBookDialogComponent implements OnInit {
     }
     this.currentBooks = [...this.currentBooks, book];
     this.availableBooks = this.availableBooks.filter((b) => b.id !== book.id);
-    this.cdr.detectChanges();
   }
 
   stageRemove(book: BookSummary): void {
@@ -83,7 +84,6 @@ export class AssignBookDialogComponent implements OnInit {
     }
     this.currentBooks = this.currentBooks.filter((b) => b.id !== book.id);
     this.availableBooks = [...this.availableBooks, book];
-    this.cdr.detectChanges();
   }
 
   save(): void {

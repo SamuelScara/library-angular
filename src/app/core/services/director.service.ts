@@ -15,6 +15,10 @@ export class DirectorService {
     return this.http.get<Director[]>(this.baseUrl);
   }
 
+  getById(id: number): Observable<Director> {
+    return this.http.get<Director>(`${this.baseUrl}/${id}`);
+  }
+
   getLib(directorId: number): Observable<Lib> {
     return this.http.get<Lib>(`${this.baseUrl}/${directorId}/lib`);
   }

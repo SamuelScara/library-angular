@@ -1,5 +1,5 @@
 import { NgFor, NgIf } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,6 +17,7 @@ import { LibService } from '../../../core/services/lib.service';
   imports: [MatDialogModule, MatListModule, MatButtonModule, MatIconModule, NgFor, NgIf],
   templateUrl: './assign-books-dialog.component.html',
   styleUrl: './assign-books-dialog.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AssignBooksDialogComponent implements OnInit {
   private bookService = inject(BookService);
@@ -37,20 +38,18 @@ export class AssignBooksDialogComponent implements OnInit {
     const assignedIds = new Set(this.lib.books.map((b) => b.id));
     this.bookService.getAllList().subscribe((books) => {
       this.availableBooks = books.filter((b) => !assignedIds.has(b.id));
-      this.cdr.detectChanges();
+      this.cdr.markForCheck();
     });
   }
 
   stageBook(book: Book): void {
     this.stagedBooks = [...this.stagedBooks, book];
     this.availableBooks = this.availableBooks.filter((b) => b.id !== book.id);
-    this.cdr.detectChanges();
   }
 
   unstageBook(book: Book): void {
     this.stagedBooks = this.stagedBooks.filter((b) => b.id !== book.id);
     this.availableBooks = [...this.availableBooks, book];
-    this.cdr.detectChanges();
   }
 
   save(): void {

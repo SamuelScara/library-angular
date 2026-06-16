@@ -42,8 +42,11 @@ export class LoginComponent {
   submit() {
     if (this.form.invalid) return;
     this.authService.login(this.form.value as LoginRequest).subscribe({
-      next: (user) => {
-        this.router.navigate([user.role === 'ROLE_ADMIN' ? '/admin' : '/catalog']);
+      next: (response) => {
+        if (response.role === 'ROLE_ADMIN') this.router.navigate(['/admin']);
+        else if (response.role === 'ROLE_AUTHOR') this.router.navigate(['/my-author-profile']);
+        else if (response.role === 'ROLE_DIRECTOR') this.router.navigate(['/my-director-profile']);
+        else this.router.navigate(['/catalog']);
       },
       error: () => (this.error = 'Credentials not valid'),
     });

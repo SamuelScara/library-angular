@@ -32,6 +32,9 @@
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let u">
         <button mat-button color="primary" (click)="save(u)">Save</button>
+        <button mat-icon-button (click)="openLinkDialog(u)" title="Link author / director">
+          <mat-icon>link</mat-icon>
+        </button>
       </td>
     </ng-container>
 

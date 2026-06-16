@@ -1,0 +1,46 @@
+<mat-toolbar>
+    <mat-icon style="margin-right: 8px">business</mat-icon>
+    <span>My Library</span>
+  </mat-toolbar>
+  
+  <ng-container *ngIf="notAssigned">
+    <p style="padding: 24px; color: gray; text-align: center">No library assigned yet.</p>
+  </ng-container>
+  
+  <ng-container *ngIf="!lib && !notAssigned">
+    <p style="padding: 24px; color: gray; text-align: center">Loading...</p>
+  </ng-container>
+  
+  <mat-accordion *ngIf="lib">
+    <mat-expansion-panel [expanded]="true">
+    
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{ lib.name }}</mat-panel-title>
+        <mat-panel-description>
+          <strong>Address:</strong>&nbsp;{{ lib.city }} — {{ lib.address }}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <mat-list>
+        <mat-list-item *ngFor="let book of lib.books">
+          <mat-icon matListItemIcon>book</mat-icon>
+          <span matListItemTitle>{{ book.title }}</span>
+          <span matListItemLine>{{ book.isbn }} · {{ book.pubYear }}</span>
+          <button matListItemMeta mat-icon-button color="warn" (click)="openBookInfoDialog(book)">
+            <mat-icon>info</mat-icon>
+          </button>
+          <button matListItemMeta mat-icon-button color="warn" (click)="unassignBook(book.id)">
+            <mat-icon>remove</mat-icon>
+          </button>
+        </mat-list-item>
+        <mat-list-item *ngIf="lib.books.length === 0">
+          <span matListItemTitle style="color: gray">No books assigned</span>
+        </mat-list-item>
+      </mat-list>
+  
+      <mat-action-row>
+        <button mat-flat-button color="primary" (click)="openAssignBooksDialog()">Add Books</button>
+      </mat-action-row>
+
+    </mat-expansion-panel>
+  </mat-accordion>

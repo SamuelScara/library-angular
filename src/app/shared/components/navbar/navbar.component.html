@@ -19,11 +19,23 @@
 
     <!-- User / Author / Director -->
     <ng-container *ngIf="user.role !== 'ROLE_ADMIN'">
-      <a mat-button routerLink="/catalog"          routerLinkActive="active-link">Catalog</a>
-      <a mat-button routerLink="/my-reservations"  routerLinkActive="active-link">My reservations</a>
+      <a mat-button routerLink="/catalog" routerLinkActive="active-link">Catalog</a>
     </ng-container>
-    
-    <a mat-button routerLink="/profile" routerLinkActive="active-link">Profile</a>
+
+    <ng-container *ngIf="user.role === 'ROLE_DIRECTOR'">
+      <a mat-button routerLink="/my-library" routerLinkActive="active-link">My Library</a>
+    </ng-container>
+
+    <!-- Reservations: only ROLE_USER -->
+    <ng-container *ngIf="user.role === 'ROLE_USER'">
+      <a mat-button routerLink="/my-reservations" routerLinkActive="active-link">My reservations</a>
+    </ng-container>
+
+    <!-- Profile link: each role has its own page -->
+    <a mat-button
+       [routerLink]="user.role === 'ROLE_AUTHOR' ? '/my-author-profile' :
+                     user.role === 'ROLE_DIRECTOR' ? '/my-director-profile' : '/profile'"
+       routerLinkActive="active-link">Profile</a>
     <button mat-button (click)="confirmLogout()">Logout</button>
 
   </ng-container>

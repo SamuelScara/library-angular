@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>Link entity — {{ user.username }}</h2>
+
+<mat-dialog-content>
+  <p style="color: #777; font-size: 14px; margin: 0 0 16px">
+    Associate this account with an existing author or director.
+  </p>
+
+  <mat-radio-group [formControl]="entityType" style="display: flex; flex-direction: column; gap: 8px">
+    <mat-radio-button value="AUTHOR">Author</mat-radio-button>
+    <mat-radio-button value="DIRECTOR">Director</mat-radio-button>
+    <mat-radio-button value="NONE">None (revert to ROLE_USER)</mat-radio-button>
+  </mat-radio-group>
+
+  <mat-form-field appearance="outline" style="width: 100%; margin-top: 16px"
+                  *ngIf="entityType.value === 'AUTHOR'">
+    <mat-label>Select author</mat-label>
+    <mat-select [formControl]="selectedAuthorId">
+      <mat-option *ngFor="let a of authors" [value]="a.id">
+        {{ a.firstName }} {{ a.lastName }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" style="width: 100%; margin-top: 16px"
+                  *ngIf="entityType.value === 'DIRECTOR'">
+    <mat-label>Select director</mat-label>
+    <mat-select [formControl]="selectedDirectorId">
+      <mat-option *ngFor="let d of directors" [value]="d.id">
+        {{ d.firstName }} {{ d.lastName }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="!canConfirm" (click)="confirm()">
+    Confirm
+  </button>
+</mat-dialog-actions>

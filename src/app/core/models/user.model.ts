@@ -5,6 +5,8 @@ export interface AppUser {
   username: string;
   role: Role;
   email?: string;
+  linkedAuthorId?: number; // only for ROLE_AUTHOR
+  linkedDirectorId?: number; // only for ROLE_DIRECTOR
 }
 
 export interface AuthResponse {
@@ -13,6 +15,8 @@ export interface AuthResponse {
   role: Role;
   token: string;
   email: string;
+  linkedAuthorId?: number;
+  linkedDirectorId?: number;
 }
 
 export interface RegisterRequest {

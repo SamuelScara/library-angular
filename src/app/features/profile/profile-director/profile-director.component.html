@@ -1,0 +1,39 @@
+<ng-container *ngIf="director; else loading">
+  <div class="profile-container">
+    <div class="profile-card">
+
+      <div class="profile-header">
+        <mat-icon class="profile-icon">manage_accounts</mat-icon>
+        <div class="header-info">
+          <h2>{{ director.firstName }} {{ director.lastName }}</h2>
+          <p>{{ director.email }}</p>
+        </div>
+        <button mat-stroked-button (click)="openEditForm()">
+          <mat-icon>edit</mat-icon> Edit profile
+        </button>
+      </div>
+
+      <div class="lib-section">
+        <h3>My Library</h3>
+        <p *ngIf="!director.libId" class="empty-msg">No library assigned yet.</p>
+        <mat-card *ngIf="lib" class="lib-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="lib-avatar-icon">business</mat-icon>
+            <mat-card-title>{{ lib.name }}</mat-card-title>
+            <mat-card-subtitle>{{ lib.city }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="lib-address">{{ lib.address }}</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #loading>
+  <div class="profile-container">
+    <p class="empty-msg">Loading...</p>
+  </div>
+</ng-template>

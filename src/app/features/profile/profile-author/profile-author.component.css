@@ -68,3 +68,31 @@
   color: #999;
   font-size: 14px;
 }
+
+.account-section {
+  padding: 0 24px 24px;
+}
+
+.account-section h3 {
+  margin: 0 0 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.full-width {
+  width: 100%;
+  display: block;
+}
+
+.success-msg {
+  color: #388e3c;
+  font-size: 14px;
+  margin: 4px 0 8px;
+}
+
+.error-msg {
+  color: #d32f2f;
+  font-size: 14px;
+  margin: 4px 0 8px;
+}

@@ -26,6 +26,10 @@
       <a mat-button routerLink="/my-library" routerLinkActive="active-link">My Library</a>
     </ng-container>
 
+    <ng-container *ngIf="user.role === 'ROLE_AUTHOR'">
+      <a mat-button routerLink="/my-books" routerLinkActive="active-link">My Books</a>
+    </ng-container>
+
     <!-- Reservations: only ROLE_USER -->
     <ng-container *ngIf="user.role === 'ROLE_USER'">
       <a mat-button routerLink="/my-reservations" routerLinkActive="active-link">My reservations</a>

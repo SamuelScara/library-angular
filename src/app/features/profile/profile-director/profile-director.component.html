@@ -28,6 +28,44 @@
         </mat-card>
       </div>
 
+      <mat-divider style="margin: 24px 0"></mat-divider>
+  
+        <div class="account-section">
+          <h3>Account settings</h3>
+          <form [formGroup]="accountForm" (ngSubmit)="submitAccount()">
+          
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email</mat-label>
+              <mat-icon matPrefix>email</mat-icon>
+              <input matInput type="email" formControlName="email" />
+              <mat-error *ngIf="accountForm.get('email')?.hasError('email')">Invalid email</mat-error>
+            </mat-form-field>
+            
+            <mat-divider style="margin: 4px 0 16px"></mat-divider>
+            
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Current password</mat-label>
+              <mat-icon matPrefix>lock</mat-icon>
+              <input matInput type="password" formControlName="currentPassword" />
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>New password</mat-label>
+              <mat-icon matPrefix>lock_open</mat-icon>
+              <input matInput type="password" formControlName="newPassword" />
+              <mat-error *ngIf="accountForm.get('newPassword')?.hasError('minlength')">Min 6 characters</mat-error>
+            </mat-form-field>
+
+            <p *ngIf="successMsg" class="success-msg">{{ successMsg }}</p>
+            <p *ngIf="errorMsg" class="error-msg">{{ errorMsg }}</p>
+
+            <button mat-flat-button color="primary" type="submit" [disabled]="accountForm.invalid">
+              Save changes
+            </button>
+
+          </form>
+        </div>
+
     </div>
   </div>
 </ng-container>

@@ -78,6 +78,11 @@ export const routes: Routes = [
             (m) => m.MyLibraryComponent,
           ),
       },
+      {
+        path: 'my-books',
+        loadComponent: () =>
+          import('./features/authors/my-books/my-books.component').then((m) => m.MyBooksComponent),
+      },
     ],
   },
 

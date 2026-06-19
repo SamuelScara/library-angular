@@ -56,6 +56,9 @@
               <mat-error *ngIf="accountForm.get('newPassword')?.hasError('minlength')">Min 6 characters</mat-error>
             </mat-form-field>
 
+            <p *ngIf="accountForm.hasError('currentPasswordRequired')" class="error-msg">
+              Current password is required when setting a new password
+            </p>
             <p *ngIf="successMsg" class="success-msg">{{ successMsg }}</p>
             <p *ngIf="errorMsg" class="error-msg">{{ errorMsg }}</p>
 

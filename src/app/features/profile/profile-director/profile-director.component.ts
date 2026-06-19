@@ -1,13 +1,20 @@
 import { NgIf } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Director } from '../../../core/models/director.model';
 import { Lib } from '../../../core/models/lib.model';
@@ -37,15 +44,19 @@ export class ProfileDirectorComponent implements OnInit {
   private directorService = inject(DirectorService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+  private cdr = inject(ChangeDetectorRef);
 
   director: Director | null = null;
   lib: Lib | null = null;
 
-  accountForm = new FormGroup({
-    email: new FormControl('', [Validators.email]),
-    currentPassword: new FormControl(''),
-    newPassword: new FormControl('', [Validators.minLength(6)]),
-  });
+  accountForm = new FormGroup(
+    {
+      email: new FormControl('', [Validators.email]),
+      currentPassword: new FormControl(''),
+      newPassword: new FormControl('', [Validators.minLength(6)]),
+    },
+    { validators: requireCurrentPasswordWhenNew },
+  );
   successMsg = '';
   errorMsg = '';
 
@@ -99,7 +110,14 @@ export class ProfileDirectorComponent implements OnInit {
       error: () => {
         this.errorMsg = 'Update failed. Check your current password';
         this.successMsg = '';
+        this.cdr.detectChanges();
       },
     });
   }
+}
+
+function requireCurrentPasswordWhenNew(group: AbstractControl): ValidationErrors | null {
+  const newPw = group.get('newPassword')?.value;
+  const currentPw = group.get('currentPassword')?.value;
+  return newPw && !currentPw ? { currentPasswordRequired: true } : null;
 }

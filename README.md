@@ -1,59 +1,129 @@
-# LibraryFrontend
+# Library Angular — Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.9.
+Angular application for managing a library system. Provides a UI to browse and administer books, authors, libraries, and exhibitions with visitor simulation.
 
-## Development server
+## Tech Stack
 
-To start a local development server, run:
+| Technology | Version |
+|---|---|
+| Angular | 21.2.11 |
+| TypeScript | 5.9.2 |
+| Angular Material | 21.2.9 |
+| RxJS | 7.8.0 |
+| Vitest | 4.0.8 |
+| Node / npm | >= 20 / 11.x |
 
-```bash
-ng serve
-```
+## Prerequisites
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Node.js >= 20
+- npm >= 11
+- Spring Boot backend running on `http://localhost:8080`
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## Installation & Running
 
 ```bash
-ng build
+npm install
+npm start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+The app is available at `http://localhost:4200`.
 
-## Running unit tests
+All calls to `/api/*` are automatically proxied to the backend at `http://localhost:8080` (configured in `proxy.conf.json`).
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Production Build
 
 ```bash
-ng test
+npm run build
 ```
 
-## Running end-to-end tests
+Output in the `dist/` folder.
 
-For end-to-end (e2e) testing, run:
+## Architecture
+
+```
+src/app/
+├── core/
+│   ├── models/       → TypeScript interfaces (Book, Author, Lib, Exhibition, ...)
+│   └── services/     → HTTP services (AuthorService, BookService, LibService, ExhibitionService)
+├── features/
+│   ├── authors/      → Author list + create/edit form
+│   ├── books/        → Book list + form with author management
+│   ├── exhibitions/  → Exhibition list + form + simulation result dialog
+│   └── libs/         → Library list (accordion) + form + book assignment dialog
+├── shared/
+│   └── components/
+│       └── navbar/   → Navigation bar
+├── app.routes.ts     → Route definitions
+└── app.config.ts     → Providers (router, httpClient, animations)
+```
+
+**Modern Angular patterns:**
+- Standalone Components (no NgModules)
+- Dependency Injection via `inject()`
+- Reactive Forms with `FormBuilder`
+- Dialog pattern with `MatDialog`
+
+## Features
+
+### Libraries
+- Accordion view showing each library's associated books
+- Full CRUD (create, edit, delete)
+- Dialog to assign and remove books
+
+### Books
+- Table with title, ISBN, year, authors, and availability
+- Full CRUD
+- Author management: on creation, authors are assigned via `forkJoin` after the book is saved; on edit, assignment is real-time
+- Already-assigned books are filtered out to prevent duplicates
+
+### Authors
+- Table with first name, last name, and nationality
+- Full CRUD
+
+### Exhibitions & Simulations
+- Full CRUD for exhibitions with library and book selection
+- Visitor simulation: generates a ranking of books by estimated visitor count
+- Results displayed in a dialog with position / title / visitors columns
+
+## Routing
+
+| Path | Component | Description |
+|---|---|---|
+| `/libs` | `LibListComponent` | Home — library list |
+| `/books` | `BookListComponent` | Book management |
+| `/authors` | `AuthorListComponent` | Author management |
+| `/exhibitions` | `ExhibitionListComponent` | Exhibitions and simulations |
+
+## HTTP Services
+
+All services communicate with the backend via `HttpClient`.
+
+| Service | Base URL | Operations |
+|---|---|---|
+| `AuthorService` | `/api/authors` | Author CRUD |
+| `BookService` | `/api/books` | Book CRUD, assign/unassign authors |
+| `LibService` | `/api/libs` | Library CRUD, assign/unassign books |
+| `ExhibitionService` | `/api/exhibitions` | Exhibition CRUD, simulation |
+
+## Testing
 
 ```bash
-ng e2e
+npm test
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Run with **Vitest**.
 
-## Additional Resources
+## Branches
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+| Branch | Status | Description |
+|---|---|---|
+| `main` | Stable | Core CRUD features |
+| `develop` | Active | Integration of completed features |
+| `feature/author-features` | Done | Author CRUD |
+| `feature/book-features` | Done | Book CRUD with author management |
+| `feature/library-features` | Done | Library CRUD |
+| `feature/exhibition-features` | Done | Exhibitions and simulations |
+| `feature/login-features` | In progress | JWT authentication |
+| `feature/interceptors` | In progress | HTTP interceptors for token handling |
+| `feature/director-features` | In progress | Director management |
+| `feature/statistics-features` | In progress | Statistics dashboard |
